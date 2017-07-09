@@ -18,20 +18,21 @@
 
     <div id="output" class="container"></div>
 
-    <script src="/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
 (function () {
   var output = document.getElementById('output');
   document.getElementById('upload').onclick = function () {
     var data = new FormData();
-    data.append('name', 'nao ngzm');
+    data.append('name', 'testfile');
     data.append('file', document.getElementById('file').files[0]);
     var config = {
       onUploadProgress: function(progressEvent) {
         var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
       }
     };
-    axios.put('/upload/server', data, config)
+    // axios.post('/upload', data, config)
+    axios.post('/upload', data)
       .then(function (res) {
         output.className = 'container';
         output.innerHTML = res.data;
