@@ -1,0 +1,80 @@
+NAGA-MAC:uploader nagazumi$ npm install --save react react-dom
+npm notice created a lockfile as package-lock.json. You should commit this file.
++ react@15.6.1
++ react-dom@15.6.1
+added 19 packages in 7.933s
+
+
+[fsevents] Success: "/Users/nagazumi/DEV-NAO/uploader/node_modules/fsevents/lib/binding/Release/node-v57-darwin-x64/fse.node" already installed
+Pass --update-binary to reinstall or --build-from-source to recompile
++ babel-cli@6.24.1
++ babel-preset-react@6.24.1
+added 243 packages in 27.891s
+
+NAGA-MAC:uploader nagazumi$ npm install --save-dev webpack
+
+> uglifyjs-webpack-plugin@0.4.6 postinstall /Users/nagazumi/DEV-NAO/uploader/node_modules/uglifyjs-webpack-plugin
+> node lib/post_install.js
+
++ webpack@3.1.0
+added 153 packages in 22.838s
+
+
+
+NAGA-MAC:uploader nagazumi$ npm install --save-dev babel-loader babel-core
+npm WARN babel-loader@7.1.1 requires a peer of webpack@2 || 3 but none was installed.
+
++ babel-core@6.25.0
++ babel-loader@7.1.1
+added 14 packages and updated 1 package in 5.684s
+
+
+NAGA-MAC:uploader nagazumi$ npm install --save-dev babel-cli babel-preset-react
+
+> fsevents@1.1.2 install /Users/nagazumi/DEV-NAO/uploader/node_modules/fsevents
+> node install
+
+
+NAGA-MAC:uploader nagazumi$ npm install --save-dev babel-preset-es2015
++ babel-preset-es2015@6.24.1
+added 40 packages in 7.66s
+
+
+NAGA-MAC:uploader nagazumi$ echo '{ "presets": ["react", "es2015"] }' > .babelrc
+NAGA-MAC:uploader nagazumi$ vim .babelrc
+
+{ "presets": ["react", "es2015"] }
+
+
+NAGA-MAC:uploader nagazumi$ vim webpack.config.js
+
+var path = require('path');
+
+module.exports = {
+  entry: './csrc/app.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'public')
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      }
+    ]
+  }
+};
+
+
+NAGA-MAC:uploader nagazumi$ cat csrc/app.js
+import React from 'react';
+import { render } from 'react-dom';
+
+class App extends React.Component {
+  render() {
+    return <p>Hello React!</p>;
+  }
+}
+

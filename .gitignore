@@ -1,5 +1,6 @@
 # App
 /uploads
+/public/bundle.js
 
 # js
 package-lock.json
