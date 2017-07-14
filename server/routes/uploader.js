@@ -1,24 +1,30 @@
 const express = require('express');
 const multer = require('multer');
-const fs = require('fs');
+const sqlite3 = require('sqlite3');
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
+const db = new sqlite3.Database('sqlite/db.uploader');
 
-router.post('/', upload.single('testfile'), (req, res, next) => {
+router.post('/', upload.single('testfile'), (req, res) => {
+  const path = req.file.path;
+  const filename = req.file.originalname;
+  const mimetype = req.file.mimetype;
+  const size = req.file.size;
+
   console.log(req.file);
 
-  const tmppath = req.file.path;
-  const tgtpath = `${tmppath}_${req.file.originalname}`;
-  fs.rename(tmppath, tgtpath, (err) => {
-    if (err) {
-      console.log(err);
-      next(err);
-    } else {
-      console.log('OK');
-      res.send('OK');
-    }
+  db.serialize(() => {
+    db.run('INSERT INTO upload_files (filename, path, mimetype, size) VALUES ($f, $p, $m, $s)',
+      {
+        $F: filename,
+        $p: path,
+        $m: mimetype,
+        $s: size,
+      },
+    );
   });
+  res.send('OK');
 });
 
 module.exports = router;
