@@ -17,7 +17,7 @@ router.post('/', upload.single('testfile'), (req, res) => {
   db.serialize(() => {
     db.run('INSERT INTO upload_files (filename, path, mimetype, size) VALUES ($f, $p, $m, $s)',
       {
-        $F: filename,
+        $f: filename,
         $p: path,
         $m: mimetype,
         $s: size,
