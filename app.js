@@ -4,7 +4,7 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const uploader = require('./routes/uploader');
+const uploader = require('./server/routes/uploader');
 
 const app = express();
 
@@ -39,7 +39,7 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.send('error');
+  res.json(res.locals);
 });
 
 module.exports = app;

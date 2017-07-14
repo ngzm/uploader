@@ -1,12 +1,12 @@
 const path = require('path');
 
 module.exports = {
-  entry: './csrc/app.js',
+  entry: './client/src/app.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public'),
   },
-  devtool: 'eval-source-map',
+  devtool: 'inline-source-map',
   module: {
     loaders: [
       {
