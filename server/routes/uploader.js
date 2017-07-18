@@ -3,8 +3,8 @@ const multer = require('multer');
 const sqlite3 = require('sqlite3');
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
-const db = new sqlite3.Database('sqlite/db.uploader');
+const upload = multer({ dest: 'data/uploads/' });
+const db = new sqlite3.Database('data/db.uploader');
 
 router.post('/', upload.single('testfile'), (req, res) => {
   const path = req.file.path;
@@ -25,6 +25,28 @@ router.post('/', upload.single('testfile'), (req, res) => {
     );
   });
   res.send('OK');
+});
+
+router.get('/list', (req, res, next) => {
+  db.serialize(() => {
+    db.all('SELECT filename, mimetype, size FROM upload_files',
+      (err, rows) => {
+        if (err) {
+          console.log(`Error!! err = ${err}`);
+          next(err);
+        }
+
+        const uploads = [];
+        rows.forEach((row) => {
+          uploads.push({
+            filename: row.filename,
+            mimetype: row.mimetype,
+            size: row.size,
+          });
+        });
+        res.json(uploads);
+      });
+  });
 });
 
 module.exports = router;
