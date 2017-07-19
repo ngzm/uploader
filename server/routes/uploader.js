@@ -15,7 +15,9 @@ router.post('/', upload.single('testfile'), (req, res) => {
   console.log(req.file);
 
   db.serialize(() => {
-    db.run('INSERT INTO upload_files (filename, path, mimetype, size) VALUES ($f, $p, $m, $s)',
+    db.run('INSERT INTO upload_files ' +
+            '(filename, path, mimetype, size) ' +
+            'VALUES ($f, $p, $m, $s)',
       {
         $f: filename,
         $p: path,
@@ -29,7 +31,7 @@ router.post('/', upload.single('testfile'), (req, res) => {
 
 router.get('/list', (req, res, next) => {
   db.serialize(() => {
-    db.all('SELECT filename, mimetype, size FROM upload_files',
+    db.all('SELECT filename, mimetype, size, time FROM upload_files',
       (err, rows) => {
         if (err) {
           console.log(`Error!! err = ${err}`);
@@ -42,6 +44,7 @@ router.get('/list', (req, res, next) => {
             filename: row.filename,
             mimetype: row.mimetype,
             size: row.size,
+            time: row.time,
           });
         });
         res.json(uploads);
