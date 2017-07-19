@@ -13,11 +13,11 @@ fi
 if [ ! -f $dbfil ]; then
   sqlite3 $dbfil << END
   CREATE TABLE upload_files (
-    filename TEXT NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
     path TEXT NOT NULL UNIQUE,
-    mimetype TEXT,
+    mime TEXT,
     size INTEGER,
-    thumb TEXT,
     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 END

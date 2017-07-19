@@ -8,20 +8,18 @@ const db = new sqlite3.Database('data/db.uploader');
 
 router.post('/', upload.single('testfile'), (req, res) => {
   const path = req.file.path;
-  const filename = req.file.originalname;
-  const mimetype = req.file.mimetype;
+  const name = req.file.originalname;
+  const mime = req.file.mimetype;
   const size = req.file.size;
 
   console.log(req.file);
 
   db.serialize(() => {
-    db.run('INSERT INTO upload_files ' +
-            '(filename, path, mimetype, size) ' +
-            'VALUES ($f, $p, $m, $s)',
+    db.run('INSERT INTO upload_files (name, path, mime, size) VALUES ($f, $p, $m, $s)',
       {
-        $f: filename,
+        $f: name,
         $p: path,
-        $m: mimetype,
+        $m: mime,
         $s: size,
       },
     );
@@ -29,9 +27,9 @@ router.post('/', upload.single('testfile'), (req, res) => {
   res.send('OK');
 });
 
-router.get('/list', (req, res, next) => {
+router.get('/all', (req, res, next) => {
   db.serialize(() => {
-    db.all('SELECT filename, mimetype, size, time FROM upload_files',
+    db.all('SELECT id, name, path, mime, size, time FROM upload_files ORDER BY id',
       (err, rows) => {
         if (err) {
           console.log(`Error!! err = ${err}`);
@@ -41,9 +39,10 @@ router.get('/list', (req, res, next) => {
         const uploads = [];
         rows.forEach((row) => {
           uploads.push({
-            filename: row.filename,
+            id: row.id,
+            name: row.name,
             path: row.path,
-            mimetype: row.mimetype,
+            mime: row.mime,
             size: row.size,
             time: row.time,
           });
@@ -53,4 +52,18 @@ router.get('/list', (req, res, next) => {
   });
 });
 
+router.get('/:id', (req, res, next) => {
+  const id = req.params.id;
+
+  db.serialize(() => {
+    db.get('SELECT name, path, mime, size FROM upload_files WHERE id = $id', { $id: id },
+      (err, row) => {
+        if (err) {
+          console.log(`Error!! err = ${err}`);
+          next(err);
+        }
+        res.download(row.path, row.name);
+      });
+  });
+});
 module.exports = router;
