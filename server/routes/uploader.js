@@ -42,6 +42,7 @@ router.get('/list', (req, res, next) => {
         rows.forEach((row) => {
           uploads.push({
             filename: row.filename,
+            path: row.path,
             mimetype: row.mimetype,
             size: row.size,
             time: row.time,
