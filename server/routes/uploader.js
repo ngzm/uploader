@@ -71,6 +71,7 @@ router.get('/:id', (req, res, next) => {
           console.log(`Error!! err = ${err}`);
           next(err);
         } else if (row === null || row === undefined) {
+          console.log(`row = ${row}`);
           next(new Error('Wrong ID number'));
         } else {
           res.download(row.path, row.name);
