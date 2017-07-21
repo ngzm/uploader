@@ -1,30 +1,38 @@
-const uploadDao = require('uploaddao');
+const UploadDao = require('./upload_dao');
 
-const uploadLogic = {
-  add: (updata, onSuccess, onError) => {
+class UploadLogic {
+  constructor() {
+    this.dao = new UploadDao();
+  }
+
+  add(updata, onSuccess, onError) {
     // Validation Check
     // checkData(updata);
 
     // add updata info to db
-    uploadDao.add(updata, onSuccess, onError);
-  },
-  all: (onSuccess, onError) => {
+    this.dao.add(updata, onSuccess, onError);
+  }
+
+  all(onSuccess, onError) {
     // list all upload datas
-    uploadDao.add(onSuccess, onError);
-  },
-  get: (id, onSuccess, onError) => {
+    this.dao.all(onSuccess, onError);
+  }
+
+  get(id, onSuccess, onError) {
     if (id.match(/\D/)) {
       throw new Error('Bad reuest on ID');
     }
     // get upload data what is matched by id
-    uploadDao.get(id, onSuccess, onError);
-  },
-  delete: (id, onSuccess, onError) => {
+    this.dao.get(id, onSuccess, onError);
+  }
+
+  del(id, onSuccess, onError) {
     if (id.match(/\D/)) {
       throw new Error('Bad reuest on ID');
     }
     // delete upload data what is matched by id
-    uploadDao.delete(id, onSuccess, onError);
-  },
-};
-module.exports = uploadLogic;
+    this.dao.del(id, onSuccess, onError);
+  }
+}
+
+module.exports = UploadLogic;
