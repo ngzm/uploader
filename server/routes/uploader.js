@@ -14,36 +14,45 @@ router.post('/', upload.single('testfile'), (req, res, next) => {
     size: req.file.size,
   };
   console.log(updata);
-  uplogic.add(updata, () => { res.send('OK'); }, (err) => { next(err); });
+  uplogic.add(updata, (rpy) => {
+    console.log(rpy);
+    res.send(rpy);
+  }, (err) => {
+    console.log(`err = ${err}`);
+    next(err);
+  });
 });
 
 router.get('/all', (req, res, next) => {
-  uplogic.all((rows) => {
-    const uploads = [];
-    rows.forEach((row) => {
-      uploads.push({
-        id: row.id,
-        name: row.name,
-        path: row.path,
-        mime: row.mime,
-        size: row.size,
-        time: row.time,
-      });
-    });
-    res.json(uploads);
+  uplogic.all((upfiles) => {
+    console.log(upfiles);
+    res.json(upfiles);
   }, (err) => {
+    console.log(`err = ${err}`);
     next(err);
   });
 });
 
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
-  uplogic.get(id, (row) => { res.download(row.path, row.name); }, (err) => { next(err); });
+  uplogic.get(id, (upfile) => {
+    console.log(upfile);
+    res.download(upfile.path, upfile.name);
+  }, (err) => {
+    console.log(`err = ${err}`);
+    next(err);
+  });
 });
 
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
-  uplogic.del(id, () => { res.send('OK'); }, (err) => { next(err); });
+  uplogic.del(id, (rpy) => {
+    console.log(rpy);
+    res.send(rpy);
+  }, (err) => {
+    console.log(`err = ${err}`);
+    next(err);
+  });
 });
 
 module.exports = router;

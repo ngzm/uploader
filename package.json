@@ -17,6 +17,7 @@
     "pug": "^2.0.0-rc.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "serve-favicon": "^2.4.3",
     "sqlite3": "^3.1.8"
   },
   "devDependencies": {
