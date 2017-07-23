@@ -1,27 +1,11 @@
+const helper = require('./upload_service_helper');
+const logger = require('./logger');
 const UploadDao = require('./upload_dao');
-
-/**
- * Validation Checkers
- * private only
- */
-const privateUtils = {
-  validateData: (updata) => {
-    if (!updata.path) { return false; }
-    if (!updata.name) { return false; }
-    if (!updata.mime) { return false; }
-    if (!updata.size) { return false; }
-    return true;
-  },
-  validateId: (id) => {
-    if (!id || id.match(/\D/)) { return false; }
-    return true;
-  },
-};
 
 /**
  * Handle upload file info on database
  */
-class UploadLogic {
+class UploadSerice {
   /**
    * Constructor
    */
@@ -33,7 +17,7 @@ class UploadLogic {
    * Add upload file info to the dabatase
    */
   add(updata, success, fail) {
-    if (!privateUtils.validateData(updata)) {
+    if (!helper.validator.validateData(updata)) {
       throw new Error('Bad reuest Upload Data');
     }
     this.dao.dbaccess(() => {
@@ -49,30 +33,6 @@ class UploadLogic {
         this.dao.rollback();
         fail(err);
       });
-
-      /**
-       *
-       * Promise Chain Sample
-       *
-      new Promise((resolve, reject) => {
-        this.dao.add(updata, resolve, reject);
-      })
-      .then((dat1) => {
-        return new Promise((resolve, reject) => {
-          this.dao.all(resolve, reject);
-        });
-      })
-      .then((dat2) => {
-        return Promise.resolve();
-      })
-      .then(() => {
-        this.dao.commit();
-        success('OK');
-      })
-      .catch((err) => { this.dao.rollback(); error(err); });
-      *
-      *
-      **/
     });
   }
 
@@ -113,7 +73,7 @@ class UploadLogic {
    * Select all of upload file info
    */
   get(id, success, fail) {
-    if (!privateUtils.validateId(id)) {
+    if (!helper.validator.validateId(id)) {
       throw new Error('Bad reuest at ID');
     }
     this.dao.dbaccess(() => {
@@ -147,15 +107,30 @@ class UploadLogic {
    * Select all of upload file info
    */
   del(id, success, fail) {
-    if (!privateUtils.validateId(id)) {
+    if (!helper.validator.validateId(id)) {
       throw new Error('Bad reuest at ID');
     }
     this.dao.dbaccess(() => {
       new Promise((resolve, reject) => {
         this.dao.begin();
-        this.dao.del(id, resolve, reject);
+        this.dao.get(id, resolve, reject);
+      })
+      .then((up) => {
+        if (!up) {
+          throw new Error('No Mutch data');
+        }
+        return up.path;
+      })
+      .then((path) => {
+        logger.debug(`path = ${path}`);
+        helper.foperator.remove(path);
+
+        return new Promise((resolve, reject) => {
+          this.dao.del(id, resolve, reject);
+        });
       })
       .then((dat) => {
+        logger.debug(`dat = ${dat}`);
         this.dao.commit();
         success(dat);
       })
@@ -167,4 +142,4 @@ class UploadLogic {
   }
 }
 
-module.exports = UploadLogic;
+module.exports = UploadSerice;

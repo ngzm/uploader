@@ -1,13 +1,15 @@
 const express = require('express');
 const multer = require('multer');
-
 const logger = require('../logic/logger');
-const UploadLogic = require('../logic/upload_logic');
+const UploadService = require('../logic/upload_service');
 
 const router = express.Router();
+const upservice = new UploadService();
 const upload = multer({ dest: 'data/uploads/' });
-const uplogic = new UploadLogic();
 
+/**
+ * File Upload
+ */
 router.post('/', upload.single('testfile'), (req, res, next) => {
   const updata = {
     path: req.file.path,
@@ -17,7 +19,7 @@ router.post('/', upload.single('testfile'), (req, res, next) => {
   };
   logger.debug(`updata = ${updata}`);
 
-  uplogic.add(updata, (rpy) => {
+  upservice.add(updata, (rpy) => {
     logger.debug(`rpy = ${rpy}`);
     res.send(rpy);
   }, (err) => {
@@ -26,8 +28,11 @@ router.post('/', upload.single('testfile'), (req, res, next) => {
   });
 });
 
+/**
+ * List all upload data
+ */
 router.get('/all', (req, res, next) => {
-  uplogic.all((upfiles) => {
+  upservice.all((upfiles) => {
     logger.debug(`upfiles = ${upfiles}`);
     res.json(upfiles);
   }, (err) => {
@@ -36,9 +41,12 @@ router.get('/all', (req, res, next) => {
   });
 });
 
+/**
+ * Get specified upload data
+ */
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
-  uplogic.get(id, (upfile) => {
+  upservice.get(id, (upfile) => {
     logger.debug(`upfile = ${upfile}`);
     res.download(upfile.path, upfile.name);
   }, (err) => {
@@ -47,9 +55,12 @@ router.get('/:id', (req, res, next) => {
   });
 });
 
+/**
+ * Delete specified upload data
+ */
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
-  uplogic.del(id, (rpy) => {
+  upservice.del(id, (rpy) => {
     logger.debug(`rpy = ${rpy}`);
     res.send(rpy);
   }, (err) => {
