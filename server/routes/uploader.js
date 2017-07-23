@@ -1,5 +1,7 @@
 const express = require('express');
 const multer = require('multer');
+
+const logger = require('../logic/logger');
 const UploadLogic = require('../logic/upload_logic');
 
 const router = express.Router();
@@ -13,22 +15,23 @@ router.post('/', upload.single('testfile'), (req, res, next) => {
     mime: req.file.mimetype,
     size: req.file.size,
   };
-  console.log(updata);
+  logger.debug(`updata = ${updata}`);
+
   uplogic.add(updata, (rpy) => {
-    console.log(rpy);
+    logger.debug(`rpy = ${rpy}`);
     res.send(rpy);
   }, (err) => {
-    console.log(`err = ${err}`);
+    logger.debug(`err = ${err}`);
     next(err);
   });
 });
 
 router.get('/all', (req, res, next) => {
   uplogic.all((upfiles) => {
-    console.log(upfiles);
+    logger.debug(`upfiles = ${upfiles}`);
     res.json(upfiles);
   }, (err) => {
-    console.log(`err = ${err}`);
+    logger.debug(`err = ${err}`);
     next(err);
   });
 });
@@ -36,10 +39,10 @@ router.get('/all', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   uplogic.get(id, (upfile) => {
-    console.log(upfile);
+    logger.debug(`upfile = ${upfile}`);
     res.download(upfile.path, upfile.name);
   }, (err) => {
-    console.log(`err = ${err}`);
+    logger.debug(`err = ${err}`);
     next(err);
   });
 });
@@ -47,10 +50,10 @@ router.get('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
   uplogic.del(id, (rpy) => {
-    console.log(rpy);
+    logger.debug(`rpy = ${rpy}`);
     res.send(rpy);
   }, (err) => {
-    console.log(`err = ${err}`);
+    logger.debug(`err = ${err}`);
     next(err);
   });
 });

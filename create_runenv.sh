@@ -3,6 +3,7 @@
 dtdir='data'
 updir="${dtdir}/uploads"
 dbfil="${dtdir}/db.uploader"
+lgdir="${dtdir}/log"
 
 # make upload data's directory
 if [ ! -d $updir ]; then
@@ -21,4 +22,9 @@ if [ ! -f $dbfil ]; then
     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 END
+fi
+
+# make log directory
+if [ ! -d $lgdir ]; then
+  mkdir -p $lgdir
 fi

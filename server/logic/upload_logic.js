@@ -58,13 +58,11 @@ class UploadLogic {
         this.dao.add(updata, resolve, reject);
       })
       .then((dat1) => {
-        console.log(`dat1 = ${dat1}`);
         return new Promise((resolve, reject) => {
           this.dao.all(resolve, reject);
         });
       })
       .then((dat2) => {
-        console.log(`dat2 = ${dat2}`);
         return Promise.resolve();
       })
       .then(() => {
@@ -72,6 +70,8 @@ class UploadLogic {
         success('OK');
       })
       .catch((err) => { this.dao.rollback(); error(err); });
+      *
+      *
       **/
     });
   }

@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 // const favicon = require('serve-favicon');
-const logger = require('morgan');
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const uploader = require('./server/routes/uploader');
@@ -14,7 +15,14 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+
+// morgan access log file
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'data', 'log', 'access.log'),
+  { flags: 'a' },
+);
+app.use(morgan('combined', { stream: accessLogStream }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

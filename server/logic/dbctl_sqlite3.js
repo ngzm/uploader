@@ -1,14 +1,16 @@
 const sqlite3 = require('sqlite3');
+const path = require('path');
+const logger = require('./logger');
 
 class DbCtl {
   constructor() {
-    this.db = new sqlite3.Database('data/db.uploader');
-    console.log('db conected !!');
+    this.db = new sqlite3.Database(path.join(__dirname, '..', '..', 'data', 'db.uploader'));
+    logger.info('db conected !!');
   }
 
   disconnect() {
     this.db.close();
-    console.log('db disconnected!');
+    logger.info('db disconnected!');
   }
 
   dbaccess(procs) {
@@ -19,17 +21,17 @@ class DbCtl {
 
   begin() {
     this.db.exec('BEGIN TRANSACTION');
-    console.log('Transaction Began!');
+    logger.info('Transaction Began!');
   }
 
   commit() {
     this.db.exec('COMMIT');
-    console.log('Transaction Committed!');
+    logger.info('Transaction Committed!');
   }
 
   rollback() {
     this.db.exec('ROLLBACK');
-    console.log('Transacrion rollbacked!');
+    logger.info('Transacrion rollbacked!');
   }
 }
 
