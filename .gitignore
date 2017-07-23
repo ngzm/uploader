@@ -1,0 +1,11 @@
+# App
+/data
+/public/bundle.js
+
+# js
+package-lock.json
+/node_modules
+
+# misc
+.DS_Store
+.env
