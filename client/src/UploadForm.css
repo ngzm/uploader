@@ -1,0 +1,12 @@
+.upload_form {
+  margin: 0px auto;
+  padding: 5px;
+}
+
+.form-inline > * {
+  margin: 5px 5px;
+}
+
+form input {
+  min-width: 500px;
+}

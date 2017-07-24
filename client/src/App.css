@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+header {
+  padding: 5px;
+  color: #336699;
+}
+
+footer {
+  padding: 5px;
+  color: #000000;
+}
