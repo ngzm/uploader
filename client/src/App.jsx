@@ -24,7 +24,7 @@ function AppHeader() {
 
 function AppMain() {
   return (
-    <main className="App">
+    <main>
       <UploadMain />
     </main>
   );

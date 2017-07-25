@@ -4,25 +4,42 @@ import './UploadForm.css';
 class UploadForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { file: null };
+    this.state = {
+      fileObj: null,
+      fileNam: 'Select File ..',
+    };
   }
 
   changeFile(evt) {
     console.dir(evt.target);
-    console.dir(evt.target.files[0]);
 
-    this.setState({ file: evt.target.files[0] });
+    if (evt.target.files.length > 0) {
+      console.dir(evt.target.files[0]);
+
+      this.setState({
+        fileObj: evt.target.files[0],
+        fileNam: evt.target.files[0].name,
+      });
+    }
   }
+
   selectFile() {
     this.fileInput.click();
   }
 
   render() {
-    const fname = (this.state.file) ? this.state.file.name : 'select file';
-
     return (
-      <div className="uploadFile">
-        <input type="text" defalutValue="select file" value={fname} />
+      <section className="upform">
+        <button className="select" type="button" onClick={() => { this.selectFile(); }}>
+          File
+        </button>
+        <input
+          className="fileName"
+          type="text"
+          readOnly
+          value={this.state.fileNam}
+          onClick={() => { this.selectFile(); }}
+        />
         <input
           className="nodisp"
           id="upfile"
@@ -31,8 +48,10 @@ class UploadForm extends Component {
           ref={(input) => { this.fileInput = input; }}
           onChange={(e) => { this.changeFile(e); }}
         />
-        <button onClick={() => { this.selectFile(); }}>SELECT FILE</button>
-      </div>
+        <button className="send" type="button" onClick={() => { this.selectFile(); }}>
+          SEND
+        </button>
+      </section>
     );
   }
 }

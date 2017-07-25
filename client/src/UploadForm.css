@@ -1,17 +1,32 @@
-.uploadFile {
+.upform {
   background-color: #99CCFF;
-  margin: 0px auto;
+  margin: 10px auto;
+  padding: 8px;
 }
 
-.uploadFile label {
-  width: 500px;
-  background-color: #eee;
-  border: solid 1px;
+.upform button {
+  font-size: medium;
+  color: white;
+}
+.upform button.select {
+  background-color: #6699cc;
+  margin-right: 2px;
+}
+
+.upform button.send {
+  background-color: #ff9966;
+  margin-left: 10px;
+}
+
+.upform input {
+  font-size: medium;
+  color: gray;
+}
+
+.upform input.fileName {
+  min-width: 300px;
 }
 
 .nodisp {
   display: none;
-}
-
-form input {
 }
