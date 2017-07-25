@@ -17,7 +17,7 @@ function App() {
 function AppHeader() {
   return (
     <header>
-      <h1>ngzm uploader</h1>
+      <h1>ngzm - omg</h1>
     </header>
   );
 }

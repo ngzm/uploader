@@ -7,11 +7,13 @@
 }
 
 header {
+  background-color: #336699;
+  color: #ffffff;
   padding: 5px;
-  color: #336699;
 }
 
 footer {
+  background-color: #336699;
+  color: #ffffff;
   padding: 5px;
-  color: #000000;
 }

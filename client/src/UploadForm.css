@@ -1,12 +1,17 @@
-.upload_form {
+.uploadFile {
+  background-color: #99CCFF;
   margin: 0px auto;
-  padding: 5px;
 }
 
-.form-inline > * {
-  margin: 5px 5px;
+.uploadFile label {
+  width: 500px;
+  background-color: #eee;
+  border: solid 1px;
+}
+
+.nodisp {
+  display: none;
 }
 
 form input {
-  min-width: 500px;
 }
