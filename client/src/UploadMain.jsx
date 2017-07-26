@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import UploadForm from './UploadForm';
-// import './Upload.css';
+import UploadList from './UploadList';
 
 class UploadMain extends Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class UploadMain extends Component {
     return (
       <div>
         <UploadForm />
-        {/* <UploaList /> */}
+        <UploadList />
       </div>
     );
   }
