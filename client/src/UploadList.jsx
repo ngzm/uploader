@@ -14,22 +14,31 @@ class UploadList extends Component {
   }
 
   render() {
+    console.dir(this.props.upfiles);
+
     const upJsxs = [];
+    let i = 0;
     this.props.upfiles.forEach((up) => {
       upJsxs.push(
         <UpFile
-          upfile={up}
+          key={i}
+          up={up}
           onDownload={(e) => { this.download(e); }}
           onRemove={(e) => { this.remove(e); }}
         />,
       );
+      i += 1;
     });
 
     return (
       <section>
         <table>
-          <tr><th>ID</th><th>name</th><th>size</th><th>up date</th></tr>
-          {upJsxs}
+          <thead>
+            <tr><th>ID</th><th>name</th><th>size</th><th>up date</th></tr>
+          </thead>
+          <tbody>
+            {upJsxs}
+          </tbody>
         </table>
       </section>
     );
@@ -41,7 +50,7 @@ UploadList.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     size: PropTypes.number.isRequired,
-    date: PropTypes.instanceOf(Date).isRequired,
+//    date: PropTypes.instanceOf(Date).isRequired,
   }).isRequired).isRequired,
 };
 
@@ -51,7 +60,6 @@ function UpFile(props) {
       <td>{props.up.id}</td>
       <td>{props.up.name}</td>
       <td>{props.up.size}</td>
-      <td>{props.up.date}</td>
       <td><button onClick={(e) => { props.onDownload(e); }}>DL</button></td>
       <td><button onClick={(e) => { props.onRemove(e); }}>RM</button></td>
     </tr>
@@ -63,7 +71,7 @@ UpFile.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     size: PropTypes.number.isRequired,
-    date: PropTypes.instanceOf(Date).isRequired,
+//    date: PropTypes.instanceOf(Date).isRequired,
   }).isRequired,
   onDownload: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
