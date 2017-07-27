@@ -4,41 +4,51 @@ import UploadForm from './UploadForm';
 import UploadList from './UploadList';
 
 class UploadMain extends Component {
+  static getAll() {
+    return Axios.get('/upload/all');
+  }
+
+  static postFile(file) {
+    const formData = new FormData();
+    formData.append('upfile', file);
+    return Axios.post('/upload', formData);
+  }
+
+  static setUppedFiles(datas) {
+    return datas.map(d => (
+      { id: d.id, name: d.name, size: d.size, date: UploadMain.getUtcDate(d.time) }
+    ));
+  }
+
+  static getUtcDate(utcstring) {
+    const loco = new Date(utcstring).getTime();
+    const ofst = new Date().getTimezoneOffset() * 60 * 1000;
+    return new Date(loco - ofst);
+  }
+
   constructor(props) {
     super(props);
     this.state = {
-      uppedfiles: [
-        { id: 1, name: 'aaa.png', size: 100, date: new Date() },
-        { id: 2, name: 'bbb.png', size: 200, date: new Date() },
-        { id: 3, name: 'ccc.png', size: 300, date: new Date() },
-        { id: 4, name: 'ddd.png', size: 400, date: new Date() },
-        { id: 5, name: 'eee.png', size: 500, date: new Date() },
-      ],
+      uppedfiles: [],
     };
   }
 
-  upload(fileObj) {
-    const formdata = new FormData();
-    formdata.append('upfile', fileObj);
-
-    Axios.post('/upload', formdata)
+  upload(file) {
+    UploadMain.postFile(file)
     .then((res) => {
+      console.log('post result');
       console.dir(res);
 
-      this.setState({
-        uppedfiles: [
-          { id: 1, name: 'aaa.png', size: 100, date: new Date() },
-          { id: 2, name: 'bbb.png', size: 200, date: new Date() },
-          { id: 3, name: 'ccc.png', size: 300, date: new Date() },
-          { id: 4, name: 'ddd.png', size: 400, date: new Date() },
-          { id: 5, name: 'eee.png', size: 500, date: new Date() },
-          { id: 6, name: 'fff.png', size: 600, date: new Date() },
-          { id: 7, name: 'ggg.png', size: 700, date: new Date() },
-          { id: 8, name: 'hhh.png', size: 800, date: new Date() },
-        ],
-      });
-    }).catch((res) => {
+      return UploadMain.getAll();
+    })
+    .then((res) => {
+      console.log('get result');
       console.dir(res);
+
+      this.setState({ uppedfiles: UploadMain.setUppedFiles(res.data) });
+    })
+    .catch((err) => {
+      console.dir(err);
     });
   }
 
