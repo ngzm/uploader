@@ -10,7 +10,7 @@ const upload = multer({ dest: 'data/uploads/' });
 /**
  * File Upload
  */
-router.post('/', upload.single('testfile'), (req, res, next) => {
+router.post('/', upload.single('upfile'), (req, res, next) => {
   const updata = {
     path: req.file.path,
     name: req.file.originalname,

@@ -8,6 +8,7 @@
     "build": "webpack -p"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
@@ -36,6 +37,6 @@
     "eslint-plugin-react": "^7.1.0",
     "html-webpack-plugin": "^2.29.0",
     "style-loader": "^0.18.2",
-    "webpack": "^3.1.0"
+    "webpack": "^3.4.1"
   }
 }

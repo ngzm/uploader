@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './UploadForm.css';
 
 class UploadForm extends Component {
@@ -27,6 +28,14 @@ class UploadForm extends Component {
     this.fileInput.click();
   }
 
+  uploadFile() {
+    this.props.onUpload(this.state.fileObj);
+    this.setState({
+      fileObj: null,
+      fileNam: 'Select File ..',
+    });
+  }
+
   render() {
     return (
       <section className="upform">
@@ -48,12 +57,14 @@ class UploadForm extends Component {
           ref={(input) => { this.fileInput = input; }}
           onChange={(e) => { this.changeFile(e); }}
         />
-        <button className="send" type="button" onClick={() => { this.selectFile(); }}>
+        <button className="send" type="button" onClick={() => { this.uploadFile(); }}>
           SEND
         </button>
       </section>
     );
   }
 }
+
+UploadForm.propTypes = { onUpload: PropTypes.func.isRequired };
 
 export default UploadForm;
