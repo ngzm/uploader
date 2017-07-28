@@ -1,65 +1,104 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
+import PropTypes from 'prop-types';
+
 import UploadForm from './UploadForm';
 import UploadList from './UploadList';
+import UploadAjax from './UploadAjax';
+import UploadHelper from './UploadHelper';
+
+const LV = { INF: 0, ERR: 1 };
+const DEFAULT_MES = 'Please try any operations ...';
 
 class UploadMain extends Component {
-  static getAll() {
-    return Axios.get('/upload/all');
-  }
-
-  static postFile(file) {
-    const formData = new FormData();
-    formData.append('upfile', file);
-    return Axios.post('/upload', formData);
-  }
-
-  static setUppedFiles(datas) {
-    return datas.map(d => (
-      { id: d.id, name: d.name, size: d.size, date: UploadMain.getUtcDate(d.time) }
-    ));
-  }
-
-  static getUtcDate(utcstring) {
-    const loco = new Date(utcstring).getTime();
-    const ofst = new Date().getTimezoneOffset() * 60 * 1000;
-    return new Date(loco - ofst);
-  }
-
   constructor(props) {
     super(props);
     this.state = {
       uppedfiles: [],
+      message: { lev: LV.INF, mes: DEFAULT_MES },
     };
   }
 
-  upload(file) {
-    UploadMain.postFile(file)
+  componentWillMount() {
+    UploadAjax.getAll()
     .then((res) => {
-      console.log('post result');
-      console.dir(res);
-
-      return UploadMain.getAll();
-    })
-    .then((res) => {
-      console.log('get result');
-      console.dir(res);
-
-      this.setState({ uppedfiles: UploadMain.setUppedFiles(res.data) });
+      this.setUppedFiles(res.data);
     })
     .catch((err) => {
       console.dir(err);
+      this.setMessage(LV.ERR, err);
+    });
+  }
+
+  setUppedFiles(datas) {
+    const upfiles = datas.map(d => ({
+      id: d.id,
+      name: d.name,
+      size: d.size,
+      date: UploadHelper.getUtcDate(d.time),
+    }));
+    this.setState({ uppedfiles: upfiles });
+  }
+
+  setMessage(lev, mes) {
+    this.setState({ message: { lev, mes } });
+  }
+
+  upload(file) {
+    UploadAjax.postFile(file)
+    .then(() => UploadAjax.getAll())
+    .then((res) => {
+      this.setUppedFiles(res.data);
+      this.setMessage(LV.INF, `Uload succcessfully : ${file.name}`);
+    })
+    .catch((err) => {
+      console.dir(err);
+      this.setMessage(LV.ERR, `Upload failed : ${file}`);
+    });
+  }
+
+  download(file) {
+    UploadAjax.downloadFile(file.id);
+    this.setMessage(LV.INF, `Finish download : #${file.id} ${file.name}`);
+  }
+
+  remove(file) {
+    UploadAjax.removeFile(file.id)
+    .then(() => UploadAjax.getAll())
+    .then((res) => {
+      this.setUppedFiles(res.data);
+      this.setMessage(LV.INF, `Remove succcessfully : #${file.id} ${file.name}`);
+    })
+    .catch((err) => {
+      console.dir(err);
+      this.setMessage(LV.ERR, `Remove failed : #${file.id} ${file.name}`);
     });
   }
 
   render() {
     return (
       <div>
+        <UploadMessage message={this.state.message} />
         <UploadForm onUpload={(f) => { this.upload(f); }} />
-        <UploadList uppedfiles={this.state.uppedfiles} />
+        <UploadList
+          uppedfiles={this.state.uppedfiles}
+          onDownload={(f) => { this.download(f); }}
+          onRemove={(f) => { this.remove(f); }}
+        />
       </div>
     );
   }
 }
+
+function UploadMessage(props) {
+  const mesClass = (props.message.lev === LV.ERR) ? 'error' : 'info';
+  return <div className={mesClass}>{props.message.mes}</div>;
+}
+
+UploadMessage.propTypes = {
+  message: PropTypes.shape({
+    lev: PropTypes.number.isRequired,
+    mes: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default UploadMain;

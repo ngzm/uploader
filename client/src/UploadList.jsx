@@ -6,26 +6,22 @@ import './UploadList.css';
  * UploadList
  */
 class UploadList extends Component {
-  downloadFile(id) {
-    console.log('download event');
-    console.log(`id = ${id}`);
+  downloadFile(file) {
+    this.props.onDownload(file);
   }
 
-  removeFile(id) {
-    console.log('remove event');
-    console.log(`id = ${id}`);
+  removeFile(file) {
+    this.props.onRemove(file);
   }
 
   render() {
-    console.dir(this.props.uppedfiles);
-
     const head = <ListHead />;
     const rows = this.props.uppedfiles.map(f => (
       <ListRow
         key={f.id}
         uppedfile={f}
-        onDownload={(id) => { this.downloadFile(id); }}
-        onRemove={(id) => { this.removeFile(id); }}
+        onDownload={() => { this.downloadFile(f); }}
+        onRemove={() => { this.removeFile(f); }}
       />));
 
     return (
@@ -50,6 +46,8 @@ UploadList.propTypes = {
     size: PropTypes.number.isRequired,
     date: PropTypes.instanceOf(Date).isRequired,
   }).isRequired).isRequired,
+  onDownload: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
 };
 
 /**
@@ -79,8 +77,8 @@ function ListRow(props) {
       <td>{upf.name}</td>
       <td>{upf.size}</td>
       <td>{upf.date.toLocaleString('ja-JP')}</td>
-      <td><button onClick={() => { props.onDownload(upf.id); }}>DL</button></td>
-      <td><button onClick={() => { props.onRemove(upf.id); }}>RM</button></td>
+      <td><button onClick={() => { props.onDownload(); }}>DL</button></td>
+      <td><button onClick={() => { props.onRemove(); }}>RM</button></td>
     </tr>
   );
 }

@@ -2,25 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './UploadForm.css';
 
+const DEFAULT_LABEL_MES = 'Select files ...';
+
 class UploadForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      fileObj: null,
-      fileNam: 'Select File ..',
-    };
+    this.state = { selectedFiles: null };
   }
 
   changeFile(evt) {
-    console.dir(evt.target);
-
     if (evt.target.files.length > 0) {
-      console.dir(evt.target.files[0]);
-
-      this.setState({
-        fileObj: evt.target.files[0],
-        fileNam: evt.target.files[0].name,
-      });
+      this.setState({ selectedFiles: evt.target.files[0] });
+      this.fileLabel.value = evt.target.files[0].name;
     }
   }
 
@@ -29,11 +22,11 @@ class UploadForm extends Component {
   }
 
   uploadFile() {
-    this.props.onUpload(this.state.fileObj);
-    this.setState({
-      fileObj: null,
-      fileNam: 'Select File ..',
-    });
+    if (this.state.selectedFiles) {
+      this.props.onUpload(this.state.selectedFiles);
+      this.setState({ selectedFiles: null });
+      this.fileLabel.value = DEFAULT_LABEL_MES;
+    }
   }
 
   render() {
@@ -43,18 +36,17 @@ class UploadForm extends Component {
           File
         </button>
         <input
-          className="fileName"
+          className="fileLabel"
           type="text"
           readOnly
-          value={this.state.fileNam}
+          defaultValue={DEFAULT_LABEL_MES}
+          ref={(elem) => { this.fileLabel = elem; }}
           onClick={() => { this.selectFile(); }}
         />
         <input
           className="nodisp"
-          id="upfile"
-          name="upfile"
           type="file"
-          ref={(input) => { this.fileInput = input; }}
+          ref={(elem) => { this.fileInput = elem; }}
           onChange={(e) => { this.changeFile(e); }}
         />
         <button className="send" type="button" onClick={() => { this.uploadFile(); }}>

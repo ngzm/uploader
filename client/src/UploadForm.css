@@ -23,7 +23,8 @@
   color: gray;
 }
 
-.upform input.fileName {
+.upform input.fileLabel {
+  width: 60%;
   min-width: 300px;
 }
 
