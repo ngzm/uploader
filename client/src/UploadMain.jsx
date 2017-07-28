@@ -57,7 +57,7 @@ class UploadMain extends Component {
   }
 
   download(file) {
-    UploadAjax.downloadFile(file.id);
+    UploadAjax.downloadFile(file);
     this.setMessage(LV.INF, `Finish download : #${file.id} ${file.name}`);
   }
 
