@@ -19,7 +19,7 @@ class UploadDao extends DbCtl {
   }
 
   all(success, fail) {
-    this.db.all('SELECT id, name, path, mime, size, time FROM upload_files ORDER BY id',
+    this.db.all('SELECT id, name, path, mime, size, time FROM upload_files ORDER BY id DESC',
       (err, rows) => {
         if (err) {
           fail(err);
