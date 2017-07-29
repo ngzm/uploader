@@ -5,6 +5,7 @@ import UploadForm from './UploadForm';
 import UploadList from './UploadList';
 import UploadAjax from './UploadAjax';
 import UploadHelper from './UploadHelper';
+import './UploadMain.css';
 
 const LV = { INF: 0, ERR: 1 };
 const DEFAULT_MES = 'Please try any operations ...';
@@ -19,14 +20,7 @@ class UploadMain extends Component {
   }
 
   componentWillMount() {
-    UploadAjax.getAll()
-    .then((res) => {
-      this.setUppedFiles(res.data);
-    })
-    .catch((err) => {
-      console.dir(err);
-      this.setMessage(LV.ERR, err);
-    });
+    this.all();
   }
 
   setUppedFiles(datas) {
@@ -43,34 +37,37 @@ class UploadMain extends Component {
     this.setState({ message: { lev, mes } });
   }
 
-  upload(file) {
-    UploadAjax.postFile(file)
-    .then(() => UploadAjax.getAll())
-    .then((res) => {
+  all() {
+    UploadAjax.getAll((res) => {
       this.setUppedFiles(res.data);
-      this.setMessage(LV.INF, `Uload succcessfully : ${file.name}`);
-    })
-    .catch((err) => {
-      console.dir(err);
-      this.setMessage(LV.ERR, `Upload failed : ${file}`);
+    }, (err) => {
+      this.setMessage(LV.ERR, `Get all Failed : ${err}`);
+    });
+  }
+
+  upload(file) {
+    UploadAjax.uploadFile(file, (res) => {
+      this.setUppedFiles(res.data);
+      this.setMessage(LV.INF, `${file.name} uploaded succcessfully`);
+    }, (err) => {
+      this.setMessage(LV.ERR, `${file.name} upload failed : ${err}`);
     });
   }
 
   download(file) {
-    UploadAjax.downloadFile(file);
-    this.setMessage(LV.INF, `Finish download : #${file.id} ${file.name}`);
+    UploadAjax.downloadFile(file, () => {
+      this.setMessage(LV.INF, `#${file.id} ${file.name} downloaded successfully`);
+    }, (err) => {
+      this.setMessage(LV.ERR, `#${file.id} ${file.name} download failed : ${err}`);
+    });
   }
 
   remove(file) {
-    UploadAjax.removeFile(file.id)
-    .then(() => UploadAjax.getAll())
-    .then((res) => {
+    UploadAjax.removeFile(file, (res) => {
       this.setUppedFiles(res.data);
-      this.setMessage(LV.INF, `Remove succcessfully : #${file.id} ${file.name}`);
-    })
-    .catch((err) => {
-      console.dir(err);
-      this.setMessage(LV.ERR, `Remove failed : #${file.id} ${file.name}`);
+      this.setMessage(LV.INF, `#${file.id} ${file.name} removed succcessfully`);
+    }, (err) => {
+      this.setMessage(LV.ERR, `#${file.id} ${file.name} remove failed : ${err}`);
     });
   }
 
@@ -91,7 +88,11 @@ class UploadMain extends Component {
 
 function UploadMessage(props) {
   const mesClass = (props.message.lev === LV.ERR) ? 'error' : 'info';
-  return <div className={mesClass}>{props.message.mes}</div>;
+  return (
+    <section className="mainMsg">
+      <div className={mesClass}>{props.message.mes}</div>
+    </section>
+  );
 }
 
 UploadMessage.propTypes = {

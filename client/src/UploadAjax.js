@@ -3,74 +3,113 @@ import Axios from 'axios';
 export default class UploadAjax {
   /**
    * get all uploaded files data
-   *
-   * return Promise
    */
-  static getAll() {
-    return Axios.get('/upload/all');
+  static getAll(success, fail) {
+    Axios.get('/upload/all')
+    .then((res) => {
+      console.dir(res);
+      success(res);
+    })
+    .catch((err) => {
+      console.dir(err);
+      fail(err);
+    });
   }
 
   /**
-   * post file data
-   *
-   * return Promise
+   * upload file data
    */
-  static postFile(file) {
+  static uploadFile(file, success, fail) {
     const formData = new FormData();
     formData.append('upfile', file);
-    return Axios.post('/upload', formData);
+
+    Axios.post('/upload', formData)
+    .then((res) => {
+      console.dir(res);
+      return Axios.get('/upload/all');
+    })
+    .then((res) => {
+      console.dir(res);
+      success(res);
+    })
+    .catch((err) => {
+      console.dir(err);
+      fail(err);
+    });
   }
 
   /**
-   * download filea
+   * download File from Blob object
    */
-  static downloadFile(file) {
+  static downloadFromBlob(blob, filename) {
+    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+      // IE の場合
+      console.log('msSaveBlob');
+
+      window.navigator.msSaveBlob(blob, filename);
+    } else {
+      // Chrome や Firefox 等の場合
+      console.log('no msSaveBlob');
+
+      // Blob URL Scheme にDLデータを格納する
+      const blobURL = window.URL.createObjectURL(blob);
+
+      // ダミーのA要素を作成
+      const dummyA = document.createElement('a');
+      dummyA.style.display = 'none';
+      dummyA.setAttribute('download', filename);
+      dummyA.setAttribute('target', '_blank');
+      document.body.appendChild(dummyA);
+
+      // ダミーA要素からblobデータをDLさせる
+      dummyA.href = blobURL;
+      dummyA.click();
+
+      // ダミーA要素やBlob URL Shemeを削除
+      document.body.removeChild(dummyA);
+      window.URL.revokeObjectURL(blobURL);
+    }
+  }
+
+  /**
+   * download file
+   */
+  static downloadFile(file, success, fail) {
     // Axios でファイルダウンロードする場合で、ファイルデータを
     // Blob に格納する場合は、{ responsetype: 'blob' } の指定が
     // 必要。さもないと blob データ形式で res.data に格納されない。
     Axios.get(`/upload/${file.id}`, { responseType: 'blob' })
     .then((res) => {
       console.dir(res);
-
+      // Blobオブジェクトを生成
       // type は application/octet-stream で良いはず
       const blob = new Blob([res.data], { type: 'application/octet-stream' });
-
-      if (typeof window.navigator.msSaveBlob !== 'undefined') {
-        console.log('msSaveBlob');
-
-        // IE の場合
-        window.navigator.msSaveBlob(blob, file.name);
-      } else {
-        console.log('no msSaveBlob');
-
-        // Chrome や Firefox などの場合
-        const blobUrl = window.URL.createObjectURL(blob);
-
-        // ダミーのA要素を作成し、そこから blob データをDLさせる
-        const dummylink = document.createElement('a');
-        dummylink.style.display = 'none';
-        dummylink.href = blobUrl;
-        dummylink.setAttribute('download', file.name);
-        dummylink.setAttribute('target', '_blank');
-        document.body.appendChild(dummylink);
-        dummylink.click();
-
-        // ダミーで作成したA要素や BlobUrl を削除
-        document.body.removeChild(dummylink);
-        window.URL.revokeObjectURL(blobUrl);
-      }
+      // Blobオブジェクトからファイルをダウンロード
+      UploadAjax.downloadFromBlob(blob, file.name);
+      success('OK');
     })
     .catch((err) => {
-      console.log(err);
+      console.dir(err);
+      fail(err);
     });
   }
 
   /**
-   * post file data
-   *
-   * return Promise
+   * remove file
    */
-  static removeFile(id) {
-    return Axios.delete(`/upload/${id}`);
+  static removeFile(file, success, fail) {
+    Axios.delete(`/upload/${file.id}`)
+    .then((res) => {
+      console.dir(res);
+      return Axios.get('/upload/all');
+    })
+    .then((res) => {
+      console.dir(res);
+      success(res);
+    })
+    .catch((err) => {
+      console.dir(err);
+      fail(err);
+    });
   }
 }

@@ -1,0 +1,86 @@
+.uplist {
+  margin: 34px auto;
+}
+
+.uplist table {
+  margin: 0 auto;
+  width: auto;
+  border-spacing: 0;
+}
+
+.uplist table th {
+  padding: 10px 15px;
+  background: #eee;
+  background:-moz-linear-gradient(#eee, #ddd 50%);
+  background:-webkit-gradient(linear, 100% 0%, 100% 50%, from(#eee), to(#ddd));
+  font-weight: bold;
+  line-height: 120%;
+  text-align: center;
+  text-shadow:0 -1px 0 rgba(255,255,255,0.9);
+}
+
+.uplist table tr td {
+  padding: 8px 15px;
+  text-align: center;
+}
+
+.uplist table tr {
+  background: #fff;
+}
+
+.uplist table tr:nth-child(2n) {
+  background: #f5f5f5;
+}
+
+.uplist table tr:last-child td {
+  border-bottom: 2px solid #eee;
+}
+
+.uplist table tr:hover {
+  background: #eee;
+  cursor:pointer;
+}
+
+.uplist table button {
+  border:none;
+  outline: none;
+  -webkit-border-radius: 16;
+  -moz-border-radius: 16;
+  border-radius: 16px;
+  font-family: Arial;
+  font-size: 14px;
+  padding: 6px 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Firefox */
+.uplist table button::-moz-focus-inner {
+  border: 0;
+}
+
+.uplist table button.dl {
+  background: #3497d9;
+}
+
+.uplist table button.dl:hover {
+  background: #3adae0;
+}
+
+.uplist table button.dl:active {
+  color: #000000;
+  background: #66FFEE;
+}
+
+.uplist table button.rm {
+  background: #cc0022;
+}
+
+.uplist button.rm:hover {
+  background: #FF99CC;
+}
+
+.uplist table button.rm:active {
+  color: #000000;
+  background: #FFCCFF;
+}

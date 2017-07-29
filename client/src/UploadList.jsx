@@ -25,7 +25,7 @@ class UploadList extends Component {
       />));
 
     return (
-      <section>
+      <section className="uplist">
         <table>
           <thead>
             {head}
@@ -77,8 +77,8 @@ function ListRow(props) {
       <td>{upf.name}</td>
       <td>{upf.size}</td>
       <td>{upf.date.toLocaleString('ja-JP')}</td>
-      <td><button onClick={() => { props.onDownload(); }}>DL</button></td>
-      <td><button onClick={() => { props.onRemove(); }}>RM</button></td>
+      <td><button className="dl" onClick={() => { props.onDownload(); }}>DL</button></td>
+      <td><button className="rm" onClick={() => { props.onRemove(); }}>RM</button></td>
     </tr>
   );
 }

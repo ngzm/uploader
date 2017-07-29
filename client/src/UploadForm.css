@@ -4,30 +4,61 @@
   padding: 8px;
 }
 
-.upform button {
-  font-size: medium;
-  color: white;
-}
-.upform button.select {
-  background-color: #6699cc;
-  margin-right: 2px;
-}
-
-.upform button.send {
-  background-color: #ff9966;
-  margin-left: 10px;
-}
-
 .upform input {
+  margin: 0 10px 0 4px;
   font-size: medium;
   color: gray;
 }
 
 .upform input.fileLabel {
-  width: 60%;
+  width: 50%;
   min-width: 300px;
 }
 
 .nodisp {
   display: none;
 }
+.upform button {
+  border:none;
+  outline: none;
+  -webkit-border-radius: 8;
+  -moz-border-radius: 8;
+  border-radius: 8px;
+  font-family: Arial;
+  font-size: 14px;
+  padding: 8px 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Firefox */
+.upform button::-moz-focus-inner {
+  border: 0;
+}
+
+.upform button.select {
+  background: #30B080;
+}
+
+.upform button.select:hover {
+  background: #44DD99;
+}
+
+.upform button.select:active {
+  color: #000000;
+  background: #88FFDD;
+}
+
+.upform button.send {
+  background: #EE9966;
+}
+
+.upform button.send:hover {
+  background: #FFB0B0;
+}
+
+.upform button.send:active {
+  color: #000000;
+  background: #FFDDDD;
+}
+
