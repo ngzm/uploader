@@ -1,0 +1,17 @@
+.mainMsg {
+  margin: 10px auto 0px auto;
+}
+
+.mainMsg > div {
+  margin: 0 auto;
+  padding: 8px;
+}
+
+.mainMsg > div.info {
+  color: seagreen;
+}
+
+.mainMsg > div.error {
+  background-color: mistyrose;
+  color: darkred;
+}

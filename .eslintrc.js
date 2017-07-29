@@ -1,3 +1,9 @@
 module.exports = {
-    "extends": "airbnb"
+  "extends": "airbnb",
+  "globals": {
+    "window": false,
+    "document": false,
+    "FormData": false,
+    "Blob": false,
+  },
 };
