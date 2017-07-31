@@ -1,6 +1,9 @@
 /* eslint-env browser */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Login from './Login';
+import Auth from './Auth';
 import UploadMain from './UploadMain';
 import './App.css';
 
@@ -25,7 +28,14 @@ function AppHeader() {
 function AppMain() {
   return (
     <main>
-      <UploadMain />
+      <Switch>
+        <Route exact path="/" component={Login} />
+        <Auth>
+          <Switch>
+            <Route path="/upmain" component={UploadMain} />
+          </Switch>
+        </Auth>
+      </Switch>
     </main>
   );
 }
@@ -38,7 +48,10 @@ function AppFooter() {
   );
 }
 
-ReactDOM.render(
-  <App />,
+ReactDOM.render((
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+  ),
   document.getElementById('app'),
 );
