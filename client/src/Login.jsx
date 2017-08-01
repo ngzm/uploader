@@ -1,32 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-const LOCAL_STORAGE_KEY = 'ngzm_uplader_authentication_token';
+import Auth from './Authentication';
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { token: '' };
-  }
-
-  componentWillMount() {
-    const authToken = localStorage.getItem(LOCAL_STORAGE_KEY);
-    this.setState({ token: authToken });
-  }
-
   authenticate() {
-    const authToken = `${this.inputUser.value}:${this.inputPwd.value}`;
-    localStorage.setItem(LOCAL_STORAGE_KEY, authToken);
-
-    this.props.history.push('/upmain');
+    if (Auth.login(this.inputUser.value, this.inputPwd.value)) {
+      this.props.onLogin();
+      // this.props.history.push('/upmain');
+    }
   }
 
   render() {
     return (
       <section>
         <h3>ログイン</h3>
-        {this.state.token}
-
         <div>
           <input type="text" ref={(em) => { this.inputUser = em; }} placeholder="username" />
         </div>
@@ -41,5 +28,6 @@ class Login extends Component {
 
 Login.propTypes = {
   history: PropTypes.shape().isRequired,
+  onLogin: PropTypes.func.isRequired,
 };
 export default Login;

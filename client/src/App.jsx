@@ -1,10 +1,8 @@
 /* eslint-env browser */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Login from './Login';
-import Auth from './Auth';
-import UploadMain from './UploadMain';
+import { BrowserRouter } from 'react-router-dom';
+import AppMain from './AppMain';
 import './App.css';
 
 function App() {
@@ -22,21 +20,6 @@ function AppHeader() {
     <header>
       <h1>ngzm - omg</h1>
     </header>
-  );
-}
-
-function AppMain() {
-  return (
-    <main>
-      <Switch>
-        <Route exact path="/" component={Login} />
-        <Auth>
-          <Switch>
-            <Route path="/upmain" component={UploadMain} />
-          </Switch>
-        </Auth>
-      </Switch>
-    </main>
   );
 }
 

@@ -5,6 +5,7 @@ import UploadForm from './UploadForm';
 import UploadList from './UploadList';
 import UploadAjax from './UploadAjax';
 import UploadHelper from './UploadHelper';
+import Auth from './Authentication';
 import './UploadMain.css';
 
 const LV = { INF: 0, ERR: 1 };
@@ -57,6 +58,11 @@ class UploadMain extends Component {
   download(file) {
     UploadAjax.downloadFile(file, () => {
       this.setMessage(LV.INF, `#${file.id} ${file.name} downloaded successfully`);
+      //
+      //
+      //
+      Auth.logout();
+      this.props.onLogout();
     }, (err) => {
       this.setMessage(LV.ERR, `#${file.id} ${file.name} download failed : ${err}`);
     });
@@ -85,6 +91,8 @@ class UploadMain extends Component {
     );
   }
 }
+
+UploadMain.propTypes = { onLogout: PropTypes.func.isRequired };
 
 function UploadMessage(props) {
   const mesClass = (props.message.lev === LV.ERR) ? 'error' : 'info';
