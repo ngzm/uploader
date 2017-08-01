@@ -12,7 +12,6 @@ class AppMain extends Component {
   }
 
   componentWillMount() {
-    Auth.logout();
     this.setAuth();
   }
 
@@ -21,26 +20,12 @@ class AppMain extends Component {
   }
 
   render() {
+    const rProp = { auth: this.state.isAuth, sets: () => { this.setAuth(); } };
     return (
       <main>
         <Switch>
-          <Public isAuthed={this.state.isAuth}>
-            <Switch>
-              <Route
-                exact
-                path="/"
-                render={props => <Login onLogin={() => { this.setAuth(); }} {...props} />}
-              />
-            </Switch>
-          </Public>
-          <Private isAuthed={this.state.isAuth}>
-            <Switch>
-              <Route
-                path="/upmain"
-                render={props => <UploadMain onLogout={() => { this.setAuth(); }} {...props} />}
-              />
-            </Switch>
-          </Private>
+          <Route exact path="/" render={props => <Public rProp={rProp} {...props} />} />
+          <Route Path="/upmain" render={props => <Private rProp={rProp} {...props} />} />
         </Switch>
       </main>
     );
@@ -48,19 +33,33 @@ class AppMain extends Component {
 }
 
 function Public(props) {
-  return ((props.isAuthed) ? <Redirect to={'/upmain'} /> : <div>{props.children}</div>);
+  return (
+    (props.rProp.auth)
+    ? <Redirect to={'/upmain'} />
+    : <Login onLogin={() => { props.rProp.sets(); }} />
+  );
 }
+
 Public.propTypes = {
-  children: PropTypes.shape().isRequired,
-  isAuthed: PropTypes.bool.isRequired,
+  rProp: PropTypes.shape({
+    auth: PropTypes.bool.isRequired,
+    sets: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 function Private(props) {
-  return ((props.isAuthed) ? <div>{props.children}</div> : <Redirect to={'/'} />);
+  return (
+    (props.rProp.auth)
+    ? <UploadMain onLogout={() => { props.rProp.sets(); }} />
+    : <Redirect to={'/'} />
+  );
 }
+
 Private.propTypes = {
-  children: PropTypes.shape().isRequired,
-  isAuthed: PropTypes.bool.isRequired,
+  rProp: PropTypes.shape({
+    auth: PropTypes.bool.isRequired,
+    sets: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default AppMain;

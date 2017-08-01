@@ -6,7 +6,6 @@ class Login extends Component {
   authenticate() {
     if (Auth.login(this.inputUser.value, this.inputPwd.value)) {
       this.props.onLogin();
-      // this.props.history.push('/upmain');
     }
   }
 
@@ -26,8 +25,5 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
-  history: PropTypes.shape().isRequired,
-  onLogin: PropTypes.func.isRequired,
-};
+Login.propTypes = { onLogin: PropTypes.func.isRequired };
 export default Login;
