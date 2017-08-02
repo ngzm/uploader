@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import Login, { Logout } from './Login';
+import Login from './Login';
 import UploadMain from './UploadMain';
 import AuthService from './logic/AuthService';
-import CompSharing from './logic/CompSharing';
 
 class AppMain extends Component {
   constructor(props) {
@@ -14,26 +13,21 @@ class AppMain extends Component {
   }
 
   componentWillMount() {
-    this.setAuth();
-    CompSharing.setComp(this);
+    this.setState({ isAuth: AuthService.isAuthed() });
+    AuthService.setMainComp(this);
   }
 
   componentWillUnmount() {
-    CompSharing.unsetComp();
+    AuthService.unsetMainComp();
   }
 
-  setAuth() {
-    this.setState({ isAuth: AuthService.isAuthed() });
-  }
-
-  sharedFunc() {
-    this.setAuth();
+  setAuthState(flg) {
+    this.setState({ isAuth: flg });
   }
 
   render() {
     return (
       <main>
-        <div><Logout /></div>
         <Switch>
           <Route
             exact

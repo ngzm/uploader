@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import AppMain from './AppMain';
+import { Logout } from './Login';
 import './App.css';
 
 function App() {
@@ -17,9 +18,12 @@ function App() {
 
 function AppHeader() {
   return (
-    <header>
-      <h1>ngzm - omg</h1>
-    </header>
+    <div>
+      <Logout />
+      <header>
+        <h1>ngzm - omg</h1>
+      </header>
+    </div>
   );
 }
 

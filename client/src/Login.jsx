@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import AuthService from './logic/AuthService';
-import CompSharing from './logic/CompSharing';
 
 export default class Login extends Component {
   onLogin() {
-    if (AuthService.login(this.inputUser.value, this.inputPwd.value)) {
-      CompSharing.execSharedFunc();
-    }
+    AuthService.login(this.inputUser.value, this.inputPwd.value);
   }
 
   render() {
@@ -34,10 +31,6 @@ export default class Login extends Component {
 }
 
 export function Logout() {
-  const onLogout = () => {
-    AuthService.logout();
-    CompSharing.execSharedFunc();
-  };
-
+  const onLogout = () => { AuthService.logout(); };
   return <button type="button" onClick={onLogout}>Logout</button>;
 }
