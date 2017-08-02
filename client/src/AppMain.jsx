@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Login from './Login';
+
+import Login, { Logout } from './Login';
 import UploadMain from './UploadMain';
-import Auth from './Authentication';
+import AuthService from './logic/AuthService';
+import CompSharing from './logic/CompSharing';
 
 class AppMain extends Component {
   constructor(props) {
@@ -13,19 +15,35 @@ class AppMain extends Component {
 
   componentWillMount() {
     this.setAuth();
+    CompSharing.setComp(this);
+  }
+
+  componentWillUnmount() {
+    CompSharing.unsetComp();
   }
 
   setAuth() {
-    this.setState({ isAuth: Auth.isAuthed() });
+    this.setState({ isAuth: AuthService.isAuthed() });
+  }
+
+  sharedFunc() {
+    this.setAuth();
   }
 
   render() {
-    const rProp = { auth: this.state.isAuth, sets: () => { this.setAuth(); } };
     return (
       <main>
+        <div><Logout /></div>
         <Switch>
-          <Route exact path="/" render={props => <Public rProp={rProp} {...props} />} />
-          <Route Path="/upmain" render={props => <Private rProp={rProp} {...props} />} />
+          <Route
+            exact
+            path="/"
+            render={props => <Public auth={this.state.isAuth} {...props} />}
+          />
+          <Route
+            Path="/upmain"
+            render={props => <Private auth={this.state.isAuth} {...props} />}
+          />
         </Switch>
       </main>
     );
@@ -33,33 +51,14 @@ class AppMain extends Component {
 }
 
 function Public(props) {
-  return (
-    (props.rProp.auth)
-    ? <Redirect to={'/upmain'} />
-    : <Login onLogin={() => { props.rProp.sets(); }} />
-  );
+  return (props.auth) ? <Redirect to={'/upmain'} /> : <Login />;
 }
-
-Public.propTypes = {
-  rProp: PropTypes.shape({
-    auth: PropTypes.bool.isRequired,
-    sets: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
 function Private(props) {
-  return (
-    (props.rProp.auth)
-    ? <UploadMain onLogout={() => { props.rProp.sets(); }} />
-    : <Redirect to={'/'} />
-  );
+  return (props.auth) ? <UploadMain /> : <Redirect to={'/'} />;
 }
 
-Private.propTypes = {
-  rProp: PropTypes.shape({
-    auth: PropTypes.bool.isRequired,
-    sets: PropTypes.func.isRequired,
-  }).isRequired,
-};
+Public.propTypes = { auth: PropTypes.bool.isRequired };
+Private.propTypes = { auth: PropTypes.bool.isRequired };
 
 export default AppMain;

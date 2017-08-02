@@ -1,6 +1,6 @@
 const LOCAL_STORAGE_KEY = 'ngzm_uplader_authentication_token';
 
-export default class Authentication {
+export default class AuthService {
   static login(usr, pwd) {
     let token = null;
     if (usr !== '' && pwd !== '') {
@@ -31,6 +31,6 @@ export default class Authentication {
   }
 
   static isAuthed() {
-    return (Authentication.getToken() !== null);
+    return (AuthService.getToken() !== null);
   }
 }

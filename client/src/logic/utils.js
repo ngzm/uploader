@@ -1,4 +1,4 @@
-export default class UploadHelper {
+export default class utils {
   static getUtcDate(utcstring) {
     const loco = new Date(utcstring).getTime();
     const ofst = new Date().getTimezoneOffset() * 60 * 1000;

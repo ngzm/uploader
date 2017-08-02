@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import UploadForm from './UploadForm';
 import UploadList from './UploadList';
-import UploadAjax from './UploadAjax';
-import UploadHelper from './UploadHelper';
-import Auth from './Authentication';
 import './UploadMain.css';
+
+import UploadService from './logic/UploadService';
+import utils from './logic/utils';
 
 const LV = { INF: 0, ERR: 1 };
 const DEFAULT_MES = 'Please try any operations ...';
@@ -29,7 +29,7 @@ class UploadMain extends Component {
       id: d.id,
       name: d.name,
       size: d.size,
-      date: UploadHelper.getUtcDate(d.time),
+      date: utils.getUtcDate(d.time),
     }));
     this.setState({ uppedfiles: upfiles });
   }
@@ -39,7 +39,7 @@ class UploadMain extends Component {
   }
 
   all() {
-    UploadAjax.getAll((res) => {
+    UploadService.getAll((res) => {
       this.setUppedFiles(res.data);
     }, (err) => {
       this.setMessage(LV.ERR, `Get all Failed : ${err}`);
@@ -47,7 +47,7 @@ class UploadMain extends Component {
   }
 
   upload(file) {
-    UploadAjax.uploadFile(file, (res) => {
+    UploadService.uploadFile(file, (res) => {
       this.setUppedFiles(res.data);
       this.setMessage(LV.INF, `${file.name} uploaded succcessfully`);
     }, (err) => {
@@ -56,20 +56,15 @@ class UploadMain extends Component {
   }
 
   download(file) {
-    UploadAjax.downloadFile(file, () => {
+    UploadService.downloadFile(file, () => {
       this.setMessage(LV.INF, `#${file.id} ${file.name} downloaded successfully`);
-      //
-      //
-      //
-      Auth.logout();
-      this.props.onLogout();
     }, (err) => {
       this.setMessage(LV.ERR, `#${file.id} ${file.name} download failed : ${err}`);
     });
   }
 
   remove(file) {
-    UploadAjax.removeFile(file, (res) => {
+    UploadService.removeFile(file, (res) => {
       this.setUppedFiles(res.data);
       this.setMessage(LV.INF, `#${file.id} ${file.name} removed succcessfully`);
     }, (err) => {
@@ -91,8 +86,6 @@ class UploadMain extends Component {
     );
   }
 }
-
-UploadMain.propTypes = { onLogout: PropTypes.func.isRequired };
 
 function UploadMessage(props) {
   const mesClass = (props.message.lev === LV.ERR) ? 'error' : 'info';

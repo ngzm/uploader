@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Auth from './Authentication';
+import AuthService from './logic/AuthService';
+import CompSharing from './logic/CompSharing';
 
-class Login extends Component {
-  authenticate() {
-    if (Auth.login(this.inputUser.value, this.inputPwd.value)) {
-      this.props.onLogin();
+export default class Login extends Component {
+  onLogin() {
+    if (AuthService.login(this.inputUser.value, this.inputPwd.value)) {
+      CompSharing.execSharedFunc();
     }
   }
 
@@ -14,16 +14,30 @@ class Login extends Component {
       <section>
         <h3>ログイン</h3>
         <div>
-          <input type="text" ref={(em) => { this.inputUser = em; }} placeholder="username" />
+          <input
+            type="text"
+            ref={(emt) => { this.inputUser = emt; }}
+            placeholder="username"
+          />
         </div>
         <div>
-          <input type="password" ref={(em) => { this.inputPwd = em; }} placeholder="password" />
+          <input
+            type="password"
+            ref={(emt) => { this.inputPwd = emt; }}
+            placeholder="password"
+          />
         </div>
-        <button type="button" onClick={() => { this.authenticate(); }}>Login</button>
+        <button type="button" onClick={() => { this.onLogin(); }}>Login</button>
       </section>
     );
   }
 }
 
-Login.propTypes = { onLogin: PropTypes.func.isRequired };
-export default Login;
+export function Logout() {
+  const onLogout = () => {
+    AuthService.logout();
+    CompSharing.execSharedFunc();
+  };
+
+  return <button type="button" onClick={onLogout}>Logout</button>;
+}

@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-export default class UploadAjax {
+export default class UploadService {
   /**
    * get all uploaded files data
    */
@@ -85,7 +85,7 @@ export default class UploadAjax {
       // type は application/octet-stream で良いはず
       const blob = new Blob([res.data], { type: 'application/octet-stream' });
       // Blobオブジェクトからファイルをダウンロード
-      UploadAjax.downloadFromBlob(blob, file.name);
+      UploadService.downloadFromBlob(blob, file.name);
       success('OK');
     })
     .catch((err) => {
