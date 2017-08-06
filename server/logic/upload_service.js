@@ -5,7 +5,7 @@ const UploadDao = require('./upload_dao');
 /**
  * Handle upload file info on database
  */
-class UploadSerice {
+class UploadService {
   /**
    * Constructor
    */
@@ -142,4 +142,4 @@ class UploadSerice {
   }
 }
 
-module.exports = UploadSerice;
+module.exports = UploadService;

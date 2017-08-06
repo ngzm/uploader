@@ -1,6 +1,7 @@
-const LOCAL_STORAGE_KEY = 'ngzm_uplader_authentication_token';
+import Axios from 'axios';
 
 let MainComponentObject = null;
+
 const MainComp = {
   setComp: (comp) => { MainComponentObject = comp; },
   unsetComp: () => { MainComponentObject = null; },
@@ -11,24 +12,30 @@ const MainComp = {
   },
 };
 
+const LOCAL_STORAGE_KEY = 'ngzm_uplader_authentication_token';
+
 export default class AuthService {
   static login(usr, pwd) {
+    const userdata = {
+      username: usr,
+      password: pwd,
+    };
+    console.log(`userdata: ${userdata}`);
+
     let token = null;
-    if (usr !== '' && pwd !== '') {
-      token = `${usr}:${pwd}`;
-    }
-    console.log(`token: ${token}`);
-
-    //
-    // 本当はここでサーバで認証して JWT を取得する
-    //
-
-    if (token) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, token);
-      MainComp.setAuthState(true);
-      return true;
-    }
-    return false;
+    Axios.post('/login', userdata)
+    .then((res) => {
+      console.dir(res);
+      token = (res.data) ? res.data.authtoken : null;
+      if (token) {
+        localStorage.setItem(LOCAL_STORAGE_KEY, token);
+        MainComp.setAuthState(true);
+      }
+    })
+    .catch((err) => {
+      console.dir(err);
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    });
   }
 
   static logout() {

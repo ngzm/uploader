@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const uploader = require('./server/routes/uploader');
+const login = require('./server/routes/login');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Application Main Routing
 app.use('/upload', uploader);
+app.use('/login', login);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
