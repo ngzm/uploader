@@ -26,6 +26,21 @@ class LoginService {
       fail(err);
     }
   }
+
+  verify(authorization, success, fail) {
+    if (authorization && typeof authorization === 'string') {
+      const dat = authorization.match(/^Bearer [^ ]+$/);
+      if (dat && dat.length > 1) {
+        const token = dat[1];
+        if (this.jwt.verify(token)) {
+          success();
+        }
+      }
+    }
+    const err = new Error('Unauthorized to access this uploader');
+    err.status = 401;
+    fail(err);
+  }
 }
 
 module.exports = LoginService;

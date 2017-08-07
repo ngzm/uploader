@@ -5,8 +5,10 @@ const fs = require('fs');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+
 const uploader = require('./server/routes/uploader');
 const login = require('./server/routes/login');
+const logger = require('./server/logic/logger');
 
 const app = express();
 
@@ -41,14 +43,17 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use((err, req, res, next) => {
+  // logging
+  logger.error('Error Response');
+  logger.error(`err.status = ${err.status}`);
+  logger.error(`err.message = ${err.message}`);
 
-  // render the error page
-  res.status(err.status || 500);
-  res.json(res.locals);
+  const sts = err.status || 500;
+  res.status(sts).json({
+    status: sts,
+    message: err.message,
+  });
 });
 
 module.exports = app;

@@ -16,7 +16,7 @@ router.post('/', (req, res, next) => {
     logger.debug(`rpy = ${JSON.stringify(rpy)}`);
     res.status(200).json(rpy);
   }, (err) => {
-    logger.debug(`err = ${err}`);
+    logger.debug(`err = ${JSON.stringify(err)}`);
     next(err);
   });
 });

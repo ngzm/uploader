@@ -17,13 +17,13 @@ module.exports.jwt = {
     // JWTを識別するユニークなIDを生成
     const jwtid = rsasign.crypto.Util.sha256(start.toString() + username);
 
-    logger.debug(`generateToken username = ${username}`);
-    logger.debug(`generateToken APP = ${APP}`);
-    logger.debug(`generateToken URI = ${URI}`);
-    logger.debug(`generateToken KEY = ${KEY}`);
-    logger.debug(`generateToken start = ${start}`);
-    logger.debug(`generateToken end = ${end}`);
-    logger.debug(`generateToken jwtid = ${jwtid}`);
+    logger.debug(`generate username = ${username}`);
+    logger.debug(`generate APP = ${APP}`);
+    logger.debug(`generate URI = ${URI}`);
+    logger.debug(`generate KEY = ${KEY}`);
+    logger.debug(`generate start = ${start}`);
+    logger.debug(`generate end = ${end}`);
+    logger.debug(`generate jwtid = ${jwtid}`);
 
     // Header
     const jwtHeader = { alg: 'HS256', typ: 'JWT' };
@@ -44,9 +44,9 @@ module.exports.jwt = {
       'HS256',
       JSON.stringify(jwtHeader),
       JSON.stringify(jwtClaim),
-      KEY,
+      { utf8: KEY },
     );
-    logger.debug(`generateToken jwt = ${jwt}`);
+    logger.debug(`generate jwt = ${jwt}`);
 
     return jwt;
   },
@@ -55,14 +55,18 @@ module.exports.jwt = {
    */
   verify: (jwt) => {
     const KEY = process.env.JWT_KEY || 'your-secure-key';
-    logger.debug(`generateToken KEY = ${KEY}`);
+    logger.debug(`verify KEY = ${KEY}`);
 
     let isValid = false;
     if (jwt) {
       try {
-        isValid = rsasign.jws.JWS.verifyJWT(jwt, KEY, { alg: ['HS256'] });
+        isValid = rsasign.jws.JWS.verifyJWT(
+          jwt,
+          { utf8: KEY },
+          { alg: ['HS256'] },
+        );
       } catch (e) {
-        logger.debug(`verifyToken exception = ${e}`);
+        logger.debug(`verify exception = ${e}`);
         isValid = false;
       }
     }

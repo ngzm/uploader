@@ -1,6 +1,7 @@
 # App
 /data
 /public
+/production/uploader.dev.env
 
 # js
 /node_modules
