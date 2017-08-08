@@ -28,15 +28,30 @@ class LoginService {
   }
 
   verify(authorization, success, fail) {
+    logger.debug(`verify authorization = ${authorization}`);
+
     if (authorization && typeof authorization === 'string') {
-      const dat = authorization.match(/^Bearer [^ ]+$/);
+      const dat = authorization.match(/^Bearer ([^ ]+)$/);
+      logger.debug(`dat = ${dat}`);
+      logger.debug(`dat length = ${dat.length}`);
+      logger.debug(`dat length[1] = ${dat[1]}`);
+
       if (dat && dat.length > 1) {
         const token = dat[1];
+        logger.debug(`token = ${token}`);
+
         if (this.jwt.verify(token)) {
+          // JWT の Verify に成功 => 認証成功
+          logger.debug('verify OK!!!');
           success();
+
+          // 認証成功したのでリターン！！
+          return;
         }
       }
     }
+    // ここまで降りてきたものは認証に失敗している時だけ
+    // 401エラーを返す
     const err = new Error('Unauthorized to access this uploader');
     err.status = 401;
     fail(err);

@@ -42,7 +42,7 @@ class UploadMain extends Component {
     UploadService.getAll((res) => {
       this.setUppedFiles(res.data);
     }, (err) => {
-      this.setMessage(LV.ERR, `Get all Failed : ${err}`);
+      this.setMessage(LV.ERR, `Get all Failed : ${UploadService.getEMes(err)}`);
     });
   }
 
@@ -51,7 +51,7 @@ class UploadMain extends Component {
       this.setUppedFiles(res.data);
       this.setMessage(LV.INF, `${file.name} uploaded succcessfully`);
     }, (err) => {
-      this.setMessage(LV.ERR, `${file.name} upload failed : ${err}`);
+      this.setMessage(LV.ERR, `${file.name} upload failed : ${UploadService.getEmes(err)}`);
     });
   }
 
@@ -59,7 +59,7 @@ class UploadMain extends Component {
     UploadService.downloadFile(file, () => {
       this.setMessage(LV.INF, `#${file.id} ${file.name} downloaded successfully`);
     }, (err) => {
-      this.setMessage(LV.ERR, `#${file.id} ${file.name} download failed : ${err}`);
+      this.setMessage(LV.ERR, `#${file.id} ${file.name} download failed : ${UploadService.getEmes(err)}`);
     });
   }
 
@@ -68,7 +68,7 @@ class UploadMain extends Component {
       this.setUppedFiles(res.data);
       this.setMessage(LV.INF, `#${file.id} ${file.name} removed succcessfully`);
     }, (err) => {
-      this.setMessage(LV.ERR, `#${file.id} ${file.name} remove failed : ${err}`);
+      this.setMessage(LV.ERR, `#${file.id} ${file.name} remove failed : ${UploadService.getEmes(err)}`);
     });
   }
 

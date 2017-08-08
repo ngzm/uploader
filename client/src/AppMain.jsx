@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Login from './Login';
 import UploadMain from './UploadMain';
 import AuthService from './logic/AuthService';
+import ShareObj from './logic/shareobj';
 
 class AppMain extends Component {
   constructor(props) {
@@ -14,11 +15,11 @@ class AppMain extends Component {
 
   componentWillMount() {
     this.setState({ isAuth: AuthService.isAuthed() });
-    AuthService.setMainComp(this);
+    ShareObj.attach(this, this.setAuthState);
   }
 
   componentWillUnmount() {
-    AuthService.unsetMainComp();
+    ShareObj.dettach();
   }
 
   setAuthState(flg) {
