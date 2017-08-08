@@ -1,7 +1,7 @@
 const rsasign = require('jsrsasign');
 const logger = require('./logger');
 
-module.exports.jwt = {
+module.exports = {
   /**
    * Generate JWT Token
    */

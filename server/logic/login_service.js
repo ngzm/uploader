@@ -1,9 +1,9 @@
-const Jwt = require('./jwt');
+const jsonwt = require('./jwt');
 const logger = require('../logic/logger');
 
 class LoginService {
   constructor() {
-    this.jwt = Jwt.jwt;
+    this.jwt = jsonwt;
   }
 
   auth(userdata, success, fail) {
