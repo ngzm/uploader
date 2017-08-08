@@ -1,32 +1,21 @@
-import Axios from 'axios';
-import AuthTokenStorage from './webstorage';
-import ShareObj from './shareobj';
+import AuthHandler from './AuthHandler';
+
+const Naxios = AuthHandler.getNaxios();
 
 export default class AuthService {
   static login(username, password) {
     const userdata = { username, password };
-    let token = null;
 
-    Axios.post('/login', userdata)
+    Naxios.post('/login', userdata)
     .then((res) => {
-      token = (res.data) ? res.data.authtoken : null;
-      if (token) {
-        AuthTokenStorage.set(token);
-        ShareObj.apply(true);
-      }
+      AuthHandler.onLogin(res);
     })
-    .catch(() => {
-      AuthTokenStorage.remove();
+    .catch((err) => {
+      AuthHandler.onLoginError(err);
     });
   }
 
   static logout() {
-    AuthTokenStorage.remove();
-    ShareObj.apply(false);
-  }
-
-  static isAuthed() {
-    const token = AuthTokenStorage.get();
-    return (token !== null);
+    AuthHandler.onLogout();
   }
 }

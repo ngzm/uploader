@@ -1,20 +1,47 @@
-import AuthHandler from './AuthHandler';
+import Axios from 'axios';
+import AuthTokenStorage from './webstorage';
+import ShareObj from './shareobj';
 
-const Naxios = AuthHandler.getNaxios();
+/**
+ * Axios のリクエストに Authorization Header
+ * を Intercept する
+ */
+Axios.interceptors.request.use(
+  (config) => {
+    const token = AuthTokenStorage.get();
+    if (token != null) {
+      const cf = config;
+      cf.headers.Authorization = `Bearer ${token}`;
+      return cf;
+    }
+    return config;
+  },
+  error => Promise.reject(error),
+);
 
 /**
  * File Upload 処理用サービス
  */
 export default class UploadService {
   /**
+   * handleAuthError
+   */
+  static handleAuthError(err) {
+    if (err && err.response && err.response.status === 401) {
+      AuthTokenStorage.remove();
+      ShareObj.apply(false);
+    }
+  }
+
+  /**
    * get all uploaded files data
    */
   static getAll(success, fail) {
-    Naxios.get('/upload/all')
+    Axios.get('/upload/all')
     .then((res) => { success(res); })
     .catch((err) => {
       fail(err);
-      AuthHandler.onAuthError(err);
+      UploadService.handleAuthError(err);
     });
   }
 
@@ -25,12 +52,12 @@ export default class UploadService {
     const formData = new FormData();
     formData.append('upfile', file);
 
-    Naxios.post('/upload', formData)
-    .then(() => Naxios.get('/upload/all'))
+    Axios.post('/upload', formData)
+    .then(() => Axios.get('/upload/all'))
     .then((res) => { success(res); })
     .catch((err) => {
       fail(err);
-      AuthHandler.onAuthError(err);
+      UploadService.handleAuthError(err);
     });
   }
 
@@ -70,7 +97,7 @@ export default class UploadService {
     // Axios でファイルダウンロードする場合で、ファイルデータを
     // Blob に格納する場合は、{ responsetype: 'blob' } の指定が
     // 必要。さもないと blob データ形式で res.data に格納されない。
-    Naxios.get(`/upload/${file.id}`, { responseType: 'blob' })
+    Axios.get(`/upload/${file.id}`, { responseType: 'blob' })
     .then((res) => {
       // Blobオブジェクトを生成
       // type は application/octet-stream で良いはず
@@ -81,7 +108,7 @@ export default class UploadService {
     })
     .catch((err) => {
       fail(err);
-      AuthHandler.onAuthError(err);
+      UploadService.handleAuthError(err);
     });
   }
 
@@ -89,12 +116,12 @@ export default class UploadService {
    * remove file
    */
   static removeFile(file, success, fail) {
-    Naxios.delete(`/upload/${file.id}`)
-    .then(() => Naxios.get('/upload/all'))
+    Axios.delete(`/upload/${file.id}`)
+    .then(() => Axios.get('/upload/all'))
     .then((res) => { success(res); })
     .catch((err) => {
       fail(err);
-      AuthHandler.onAuthError(err);
+      UploadService.handleAuthError(err);
     });
   }
 
