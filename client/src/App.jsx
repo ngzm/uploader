@@ -56,16 +56,21 @@ function AppFooter() {
 }
 
 function AppMenu(props) {
-  const authMenu = ((props.auth) ?
-    (
+  let authMenu;
+  let username;
+  if (props.auth) {
+    username = AuthHandler.getUsername();
+    authMenu = (
       <span>
-        Hello naoki
+        Hi {username} san.
         <button type="button" onClick={() => { LoginService.logout(); }}>
           Logout
         </button>
       </span>
-    ) : <span>nanasi-san</span>
-  );
+    );
+  } else {
+    authMenu = <span>please login</span>;
+  }
   return (
     <div className="AppMenu">
       {authMenu}

@@ -1,3 +1,5 @@
+import rsasign from 'jsrsasign';
+
 import AuthTokenStorage from '../lib/webstorage';
 import ShareObj from '../lib/shareobj';
 import Naxios from '../lib/naxios';
@@ -27,4 +29,13 @@ export default {
   getNaxios: () => Naxios,
   attachShareObj: (obj, func) => { ShareObj.attach(obj, func); },
   dettachShareObj: () => { ShareObj.dettach(); },
+  getUsername: () => {
+    let username = null;
+    const token = AuthTokenStorage.get();
+    if (token) {
+      const claim = rsasign.jws.JWS.readSafeJSONString(rsasign.b64utoutf8(token.split('.')[1]));
+      username = (claim && claim.sub) ? claim.sub : null;
+    }
+    return username;
+  },
 };
