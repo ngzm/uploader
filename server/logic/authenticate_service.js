@@ -1,7 +1,7 @@
 const jsonwt = require('./jwt');
 const logger = require('../logic/logger');
 
-class LoginService {
+class AuthenticateService {
   constructor() {
     this.jwt = jsonwt;
   }
@@ -58,4 +58,4 @@ class LoginService {
   }
 }
 
-module.exports = LoginService;
+module.exports = AuthenticateService;
