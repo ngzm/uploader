@@ -1,20 +1,17 @@
-.App {
+.Login {
   text-align: center;
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 10px;
   background-color: #ffffff;
   color: #000000;
 }
 
-.AppMenu {
-  text-align: right;
-  margin: 0 auto 8px auto;
-  padding: 10px;
-  background-color: WhiteSmoke;
+.Login input {
+  width: 200px;
 }
 
-.AppMenu button {
-  margin-left: 18px;
+.Login button {
+  margin-top: 16px;
   border:none;
   outline: none;
   -webkit-border-radius: 16;
@@ -28,25 +25,13 @@
   text-decoration: none;
 }
 /* Firefox */
-.AppMenu button::-moz-focus-inner {
+.Login button::-moz-focus-inner {
   border: 0;
 }
-.AppMenu button:hover {
+.Login button:hover {
   background: DarkGray;
 }
-.AppMenu button:active {
+.Login button:active {
   color: #ffffff;
   background: DimGray;
-}
-
-header {
-  background-color: #336699;
-  color: #ffffff;
-  padding: 5px;
-}
-
-footer {
-  background-color: #336699;
-  color: #ffffff;
-  padding: 10px 5px;
 }

@@ -3,6 +3,7 @@ import ShareObj from '../lib/shareobj';
 import Naxios from '../lib/naxios';
 
 export default {
+  isAuthed: () => (AuthTokenStorage.get() !== null),
   onLogin: (res) => {
     const token = (res.data) ? res.data.authtoken : null;
     if (token) {
@@ -23,8 +24,7 @@ export default {
       ShareObj.apply(false);
     }
   },
-  isAuthed: () => (AuthTokenStorage.get() !== null),
+  getNaxios: () => Naxios,
   attachShareObj: (obj, func) => { ShareObj.attach(obj, func); },
   dettachShareObj: () => { ShareObj.dettach(); },
-  getNaxios: () => Naxios,
 };

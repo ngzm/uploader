@@ -44,7 +44,7 @@ class UploadMain extends Component {
     }, (err) => {
       this.setMessage(
         LV.ERR,
-        `Get all Failed : ${UploadService.getEMes(err)}`,
+        `Get all Failed : ${UploadService.getEmes(err)}`,
       );
     });
   }
