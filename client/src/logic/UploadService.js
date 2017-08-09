@@ -1,18 +1,20 @@
-import Axios from 'axios';
+import AuthHandler from './AuthHandler';
 
-export default class UploadAjax {
+const Naxios = AuthHandler.getNaxios();
+
+/**
+ * File Upload 処理用サービス
+ */
+export default class UploadService {
   /**
    * get all uploaded files data
    */
   static getAll(success, fail) {
-    Axios.get('/upload/all')
-    .then((res) => {
-      console.dir(res);
-      success(res);
-    })
+    Naxios.get('/upload/all')
+    .then((res) => { success(res); })
     .catch((err) => {
-      console.dir(err);
       fail(err);
+      AuthHandler.onAuthError(err);
     });
   }
 
@@ -23,18 +25,12 @@ export default class UploadAjax {
     const formData = new FormData();
     formData.append('upfile', file);
 
-    Axios.post('/upload', formData)
-    .then((res) => {
-      console.dir(res);
-      return Axios.get('/upload/all');
-    })
-    .then((res) => {
-      console.dir(res);
-      success(res);
-    })
+    Naxios.post('/upload', formData)
+    .then(() => Naxios.get('/upload/all'))
+    .then((res) => { success(res); })
     .catch((err) => {
-      console.dir(err);
       fail(err);
+      AuthHandler.onAuthError(err);
     });
   }
 
@@ -43,14 +39,10 @@ export default class UploadAjax {
    */
   static downloadFromBlob(blob, filename) {
     if (typeof window.navigator.msSaveBlob !== 'undefined') {
-      // IE の場合
-      console.log('msSaveBlob');
-
+      // IE の場合 console.log('msSaveBlob');
       window.navigator.msSaveBlob(blob, filename);
     } else {
-      // Chrome や Firefox 等の場合
-      console.log('no msSaveBlob');
-
+      // Chrome や Firefox 等の場合 console.log('no msSaveBlob');
       // Blob URL Scheme にDLデータを格納する
       const blobURL = window.URL.createObjectURL(blob);
 
@@ -78,19 +70,18 @@ export default class UploadAjax {
     // Axios でファイルダウンロードする場合で、ファイルデータを
     // Blob に格納する場合は、{ responsetype: 'blob' } の指定が
     // 必要。さもないと blob データ形式で res.data に格納されない。
-    Axios.get(`/upload/${file.id}`, { responseType: 'blob' })
+    Naxios.get(`/upload/${file.id}`, { responseType: 'blob' })
     .then((res) => {
-      console.dir(res);
       // Blobオブジェクトを生成
       // type は application/octet-stream で良いはず
       const blob = new Blob([res.data], { type: 'application/octet-stream' });
       // Blobオブジェクトからファイルをダウンロード
-      UploadAjax.downloadFromBlob(blob, file.name);
+      UploadService.downloadFromBlob(blob, file.name);
       success('OK');
     })
     .catch((err) => {
-      console.dir(err);
       fail(err);
+      AuthHandler.onAuthError(err);
     });
   }
 
@@ -98,18 +89,27 @@ export default class UploadAjax {
    * remove file
    */
   static removeFile(file, success, fail) {
-    Axios.delete(`/upload/${file.id}`)
-    .then((res) => {
-      console.dir(res);
-      return Axios.get('/upload/all');
-    })
-    .then((res) => {
-      console.dir(res);
-      success(res);
-    })
+    Naxios.delete(`/upload/${file.id}`)
+    .then(() => Naxios.get('/upload/all'))
+    .then((res) => { success(res); })
     .catch((err) => {
-      console.dir(err);
       fail(err);
+      AuthHandler.onAuthError(err);
     });
+  }
+
+  /*
+   * get error message
+   */
+  static getEmes(err) {
+    let emes;
+    if (err && err.response && err.response.data) {
+      emes = `${err.response.data.message} status ${err.response.status}`;
+    } else if (err.message) {
+      emes = err.message;
+    } else {
+      emes = 'Unkown Error !!!';
+    }
+    return emes;
   }
 }

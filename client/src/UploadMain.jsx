@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 import UploadForm from './UploadForm';
 import UploadList from './UploadList';
-import UploadAjax from './UploadAjax';
-import UploadHelper from './UploadHelper';
 import './UploadMain.css';
+
+import UploadService from './logic/UploadService';
+import utils from './lib/utils';
 
 const LV = { INF: 0, ERR: 1 };
 const DEFAULT_MES = 'Please try any operations ...';
@@ -28,7 +29,7 @@ class UploadMain extends Component {
       id: d.id,
       name: d.name,
       size: d.size,
-      date: UploadHelper.getUtcDate(d.time),
+      date: utils.getUtcDate(d.time),
     }));
     this.setState({ uppedfiles: upfiles });
   }
@@ -38,36 +39,48 @@ class UploadMain extends Component {
   }
 
   all() {
-    UploadAjax.getAll((res) => {
+    UploadService.getAll((res) => {
       this.setUppedFiles(res.data);
     }, (err) => {
-      this.setMessage(LV.ERR, `Get all Failed : ${err}`);
+      this.setMessage(
+        LV.ERR,
+        `Get all Failed : ${UploadService.getEmes(err)}`,
+      );
     });
   }
 
   upload(file) {
-    UploadAjax.uploadFile(file, (res) => {
+    UploadService.uploadFile(file, (res) => {
       this.setUppedFiles(res.data);
       this.setMessage(LV.INF, `${file.name} uploaded succcessfully`);
     }, (err) => {
-      this.setMessage(LV.ERR, `${file.name} upload failed : ${err}`);
+      this.setMessage(
+        LV.ERR,
+        `${file.name} upload failed : ${UploadService.getEmes(err)}`,
+      );
     });
   }
 
   download(file) {
-    UploadAjax.downloadFile(file, () => {
+    UploadService.downloadFile(file, () => {
       this.setMessage(LV.INF, `#${file.id} ${file.name} downloaded successfully`);
     }, (err) => {
-      this.setMessage(LV.ERR, `#${file.id} ${file.name} download failed : ${err}`);
+      this.setMessage(
+        LV.ERR,
+        `#${file.id} ${file.name} download failed : ${UploadService.getEmes(err)}`,
+      );
     });
   }
 
   remove(file) {
-    UploadAjax.removeFile(file, (res) => {
+    UploadService.removeFile(file, (res) => {
       this.setUppedFiles(res.data);
       this.setMessage(LV.INF, `#${file.id} ${file.name} removed succcessfully`);
     }, (err) => {
-      this.setMessage(LV.ERR, `#${file.id} ${file.name} remove failed : ${err}`);
+      this.setMessage(
+        LV.ERR,
+        `#${file.id} ${file.name} remove failed : ${UploadService.getEmes(err)}`,
+      );
     });
   }
 

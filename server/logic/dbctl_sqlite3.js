@@ -21,17 +21,17 @@ class DbCtl {
 
   begin() {
     this.db.exec('BEGIN TRANSACTION');
-    logger.info('Transaction Began!');
+    logger.debug('Transaction Began!');
   }
 
   commit() {
     this.db.exec('COMMIT');
-    logger.info('Transaction Committed!');
+    logger.debug('Transaction Committed!');
   }
 
   rollback() {
     this.db.exec('ROLLBACK');
-    logger.info('Transacrion rollbacked!');
+    logger.debug('Transacrion rollbacked!');
   }
 }
 
