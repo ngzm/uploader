@@ -4,8 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "webpack": "webpack",
-    "build": "webpack -p"
+    "build": "webpack",
+    "release:build": "webpack -p",
+    "release:clean": "rimraf ./production",
+    "release:mkdir": "mkdirp ./production/app && mkdirp ./production/web",
+    "release:cpapp": "cpx \"./app.js ./bin ./package-json ./public ./server\" ./production/app/",
+    "release:cpstg": "cpx \"./stage/*\" ./production/",
+    "release": "npm-run-all -s release:build release:clean release:mkdir -p release:cpapp release:cpstg" 
   },
   "dependencies": {
     "axios": "^0.16.2",
