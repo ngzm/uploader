@@ -1,8 +1,8 @@
 # App
 /data
 /public
-/stage/app/uploader.dev.env
-/production
+/production/app/uploader.dev.env
+/release
 
 # js
 /node_modules

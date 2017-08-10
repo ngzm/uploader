@@ -1,0 +1,14 @@
+version: '3.2'
+services:
+  upapp:
+    build: ./upapp
+    volumes:
+      - ./upapp/data:/home/mydir/uploader/data
+    env_file:
+      - ./uploader.env
+  upweb:
+    build: ./hamweb
+    ports:
+      - "80:80"
+    links:
+      - upapp:app
