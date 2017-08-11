@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  upapp:
+    build: ./upapp
+    volumes:
+      - ./upapp/data:/usr/src/app/data
+    env_file:
+      - ./uploader.env
+  upweb:
+    build: ./upweb
+    ports:
+      - "80:80"
+    links:
+      - upapp:upapp
+    volumes:
+      - ./upweb/log:/var/log/nginx
