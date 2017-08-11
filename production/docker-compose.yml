@@ -1,14 +1,16 @@
-version: '3.2'
+version: '3.3'
 services:
   upapp:
     build: ./upapp
     volumes:
-      - ./upapp/data:/home/mydir/uploader/data
+      - ./upapp/data:/usr/src/app/data
     env_file:
       - ./uploader.env
   upweb:
-    build: ./hamweb
+    build: ./upweb
     ports:
       - "80:80"
     links:
-      - upapp:app
+      - upapp:upapp
+    volumes:
+      - ./upweb/log:/var/log/nginx
