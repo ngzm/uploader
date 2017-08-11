@@ -7,7 +7,7 @@
     "build": "webpack",
     "release:build": "webpack -p",
     "release:clean": "rimraf ./release",
-    "release:cpapp": "cpx \"./{app.js,package*,bin/*,public/*.{html,css,js},server/**/*.js}\" ./release/upapp/app",
+    "release:cpapp": "cpx \"./{app.js,package*,bin/*,public/*.{html,css,js},server/**/*.js}\" ./release/upapp/uploader",
     "release:cpprd": "cpx \"./production/{*,**/*}\" ./release",
     "release": "npm-run-all -s release:clean release:build -p release:cpapp release:cpprd"
   },
