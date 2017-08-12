@@ -6,9 +6,9 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const uploader = require('./server/routes/uploader');
-const login = require('./server/routes/login');
 const logger = require('./server/logic/logger');
+const login = require('./server/routes/login');
+const uploader = require('./server/routes/uploader');
 
 const app = express();
 

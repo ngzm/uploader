@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 
 /**
+ * Initialize App Environments
+ */
+const setup = require('./setup');
+
+setup();
+
+/**
  * Module dependencies.
  */
 
