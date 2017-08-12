@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const multer = require('multer');
 
 const logger = require('../logic/logger');
@@ -7,7 +8,7 @@ const UploadService = require('../logic/upload_service');
 
 const router = express.Router();
 const upservice = new UploadService();
-const upload = multer({ dest: 'data/uploads/' });
+const upload = multer({ dest: path.join(__dirname, '..', '..', 'data', 'uploads') });
 
 /**
  * File Upload
