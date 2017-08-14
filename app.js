@@ -32,6 +32,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/upmain', express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  next();
+});
+
 // Application Main Routing
 app.use('/upload', uploader);
 app.use('/login', login);
