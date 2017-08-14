@@ -1,3 +1,4 @@
+import FileSaver from 'file-saver';
 import AuthHandler from './AuthHandler';
 
 const Naxios = AuthHandler.getNaxios();
@@ -35,35 +36,6 @@ export default class UploadService {
   }
 
   /**
-   * download File from Blob object
-   */
-  static downloadFromBlob(blob, filename) {
-    if (typeof window.navigator.msSaveBlob !== 'undefined') {
-      // IE の場合 console.log('msSaveBlob');
-      window.navigator.msSaveBlob(blob, filename);
-    } else {
-      // Chrome や Firefox 等の場合 console.log('no msSaveBlob');
-      // Blob URL Scheme にDLデータを格納する
-      const blobURL = window.URL.createObjectURL(blob);
-
-      // ダミーのA要素を作成
-      const dummyA = document.createElement('a');
-      dummyA.style.display = 'none';
-      dummyA.setAttribute('download', filename);
-      dummyA.setAttribute('target', '_blank');
-      document.body.appendChild(dummyA);
-
-      // ダミーA要素からblobデータをDLさせる
-      dummyA.href = blobURL;
-      dummyA.click();
-
-      // ダミーA要素やBlob URL Shemeを削除
-      document.body.removeChild(dummyA);
-      window.URL.revokeObjectURL(blobURL);
-    }
-  }
-
-  /**
    * download file
    */
   static downloadFile(file, success, fail) {
@@ -76,7 +48,7 @@ export default class UploadService {
       // type は application/octet-stream で良いはず
       const blob = new Blob([res.data], { type: 'application/octet-stream' });
       // Blobオブジェクトからファイルをダウンロード
-      UploadService.downloadFromBlob(blob, file.name);
+      FileSaver.saveAs(blob, file.name);
       success('OK');
     })
     .catch((err) => {
