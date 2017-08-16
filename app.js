@@ -32,15 +32,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/upmain', express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
+// Upload Application Routing
+app.use('/upload', (req, res, next) => {
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
   res.header('Expires', '-1');
   res.header('Pragma', 'no-cache');
   next();
 });
-
-// Application Main Routing
 app.use('/upload', uploader);
+
+// Login Application Routing
+app.use('/login', (req, res, next) => {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  next();
+});
 app.use('/login', login);
 
 // catch 404 and forward to error handler
