@@ -7,7 +7,7 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public'),
   },
-  devtool: 'inline-source-map',
+  devtool: 'cheap-module-eval-source-map',
   module: {
     loaders: [
       {
