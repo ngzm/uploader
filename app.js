@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-// const favicon = require('serve-favicon');
+const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -16,8 +16,8 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// favicon in /public
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 // morgan access log file
 const accessLogStream = fs.createWriteStream(
