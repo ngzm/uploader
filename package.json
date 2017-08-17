@@ -5,11 +5,13 @@
   "scripts": {
     "start": "node ./bin/www",
     "build": "webpack",
-    "release:build": "webpack -p",
-    "release:clean": "rimraf ./release",
-    "release:cpapp": "cpx \"./{app.js,package*,bin/*,public/*.{html,css,js},server/**/*.js}\" ./release/upapp/uploader",
-    "release:cpprd": "cpx \"./production/{*,**/*}\" ./release",
-    "release": "npm-run-all -s release:clean release:build -p release:cpapp release:cpprd"
+    "rel:build": "webpack -p",
+    "rel:clean": "rimraf ./release",
+    "rel:cpnpm": "cpx \"./package*\" ./release/upapp/uploader",
+    "rel:cpsrv": "cpx \"./{app.js,bin/*,server/**/*.js}\" ./release/upapp/uploader",
+    "rel:cpcli": "cpx \"./public/*.{html,css,js,ico}\" ./release/upapp/uploader/public",
+    "rel:cpprd": "cpx \"./production/{*,**/*}\" ./release",
+    "release": "npm-run-all -s rel:clean rel:build -p rel:cpnpm rel:cpcli rel:cpsrv rel:cpprd"
   },
   "dependencies": {
     "axios": "^0.16.2",
